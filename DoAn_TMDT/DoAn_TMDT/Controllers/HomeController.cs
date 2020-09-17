@@ -725,6 +725,7 @@ namespace DoAn_TMDT.Controllers
         public ActionResult InforOrder()
         {
             ViewBag.Name = "ABC";
+            ViewBag.Title = "ahihi";
             return View();
         }
     }
