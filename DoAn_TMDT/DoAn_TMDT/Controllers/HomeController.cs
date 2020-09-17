@@ -718,5 +718,13 @@ namespace DoAn_TMDT.Controllers
             }
             return Json(js, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult History()
+        {
+            return View();
+        }
+        public ActionResult InforOrder()
+        {
+            return View();
+        }
     }
 }
