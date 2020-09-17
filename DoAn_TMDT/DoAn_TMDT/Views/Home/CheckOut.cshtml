@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewBag.Title = "CheckOut";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<DoAn_TMDT.Models.CartItem>
+<section class="breadcrumb-section set-bg" data-setbg="/Content/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Checkout</h2>
+                    <div class="breadcrumb__option">
+                        <a href="./index.html">Home</a>
+                        <span>Checkout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <h4>Billing Details</h4>
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Fist Name<span>*</span></p>
+                                    <input type="text" id="fistname">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Last Name<span>*</span></p>
+                                    <input type="text" id="lastname">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Country<span>*</span></p>
+                            <input type="text" id="country">
+                        </div>
+                        <div class="checkout__input">
+                            <p>Address<span>*</span></p>
+                            <input type="text" id="street" placeholder="Street Address" class="checkout__input__add">
+                            <input type="text" id="quan" placeholder="Apartment, suite, unite ect (optinal)">
+                        </div>
+                        <div class="checkout__input">
+                            <p>Town/City<span>*</span></p>
+                            <input type="text" id="city">
+                        </div>
+                                <div class="checkout__input">
+                                    <p>Phone<span>*</span></p>
+                                    <input type="number" id="phone">
+                                </div>
+                        <div class="checkout__input">
+                            <p>Order notes<span>*</span></p>
+                            <input type="text"
+                                  id="note" placeholder="Notes about your order, e.g. special notes for delivery.">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4>Your Order</h4>
+                            <div class="checkout__order__products">Products <span>Total</span></div>
+                            <ul>
+                                @{
+                                    foreach (DoAn_TMDT.Models.CartItem item in Model)
+                                    {
+                                        <li>@item.TenSanPham <span>@item.ThanhTien.ToString("#,##0").Replace(",", ".") VNĐ</span></li>
+                                    }
+                                }
+                            </ul>
+                            <div class="checkout__order__subtotal">Subtotal <span>@Model.Sum(m => m.ThanhTien).ToString("#,##0").Replace(",", ".") VNĐ</span></div>
+                            @{
+                                if (Model.Sum(m => m.ThanhTien) > 200000)
+                                {
+                                    <div class="checkout__order__total">Fee Ship <span>Free Ship</span></div>
+                                    <div class="checkout__order__total">Total <span>@((Model.Sum(m => m.ThanhTien)).ToString("#,##0").Replace(",", ".")) VNĐ</span></div>
+                                }
+                                else
+                                {
+                                    <div class="checkout__order__total">Fee Ship <span>20.000 VNĐ</span></div>
+
+                                    <div class="checkout__order__total">Total <span>@((Model.Sum(m => m.ThanhTien)+20000).ToString("#,##0").Replace(",", ".")) VNĐ</span></div>
+                                }
+                            }
+                            <div class="checkout__order__total">Payment methods
+                                <span>
+                                    <select id="method">
+                                        <option value="direct">Direct</option>
+                                        <option value="card">Bank Card</option>
+                                    </select>
+                                </span>
+                            </div>
+                            <button type="submit" id="pay" class="site-btn">PLACE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div id="img_pay"></div>
+</section>
+@section animation{
+    <script>
+        $("#pay").click(function () {
+            var method = $("#method").val();
+            if (method == "card") {
+                $("#img_pay").html("<img src='/Content/img/QR/10.jpg'/>");
+            } else if (method == "direct") {
+                alert("Cảm ơn");
+            } else {
+                alert("Không có phương thức thanh toán này");
+            }
+        });
+        var body = $("html, body");
+        body.animate({ scrollTop: 738 });
+    </script>
+}

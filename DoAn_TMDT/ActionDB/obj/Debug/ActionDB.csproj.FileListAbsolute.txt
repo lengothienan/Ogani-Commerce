@@ -1,0 +1,15 @@
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\ActionDB.dll.config
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\ActionDB.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\ActionDB.pdb
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\EntityFramework.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\Library.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\Library.pdb
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\Library.dll.config
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\EntityFramework.xml
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\obj\Debug\ActionDB.csprojAssemblyReference.cache
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\obj\Debug\ActionDB.csproj.CoreCompileInputs.cache
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\obj\Debug\ActionDB.csproj.CopyComplete
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\obj\Debug\ActionDB.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\ActionDB\obj\Debug\ActionDB.pdb

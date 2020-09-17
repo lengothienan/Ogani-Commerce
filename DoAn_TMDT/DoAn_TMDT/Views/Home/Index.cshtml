@@ -1,0 +1,314 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+<section class="categories">
+    <div class="container">
+        <div class="row">
+            <div class="categories__slider owl-carousel">
+                <div class="col-lg-3">
+                    <div class="categories__item set-bg" data-setbg="/Content/img/categories/cat-1.jpg">
+                        <h5><a href="#">Fresh Fruit</a></h5>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="categories__item set-bg" data-setbg="/Content/img/categories/cat-2.jpg">
+                        <h5><a href="#">Dried Fruit</a></h5>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="categories__item set-bg" data-setbg="/Content/img/categories/cat-3.jpg">
+                        <h5><a href="#">Vegetables</a></h5>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="categories__item set-bg" data-setbg="/Content/img/categories/cat-4.jpg">
+                        <h5><a href="#">drink fruits</a></h5>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="categories__item set-bg" data-setbg="/Content/img/categories/cat-5.jpg">
+                        <h5><a href="#">drink fruits</a></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Categories Section End -->
+<!-- Featured Section Begin -->
+<section class="featured spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Featured Product</h2>
+                </div>
+                <div class="featured__controls">
+                    <ul>
+                        <li class="active" data-filter="*">All</li>
+                        <li data-filter=".oatmeal">Oatmeal</li>
+                        <li data-filter=".freshmeat">Fresh Meat</li>
+                        <li data-filter=".vegetables">Vegetables</li>
+                        <li data-filter=".fastfood">Fastfood</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row featured__filter">
+            @{
+                ActionDB.Code code = new ActionDB.Code();
+                List<Library.Product> sp = code.GetProducts();
+                var dem = 0;
+                foreach (Library.Product item in sp)
+                {
+                    Library.Sale sale = code.GetSale(item.IDKM);
+                    if (dem < 8)
+                    {
+                        string tam = "";
+                        List<Library.ProductOfType> pot = code.GetProductOfTypes(item.IDSP);
+                        foreach (Library.ProductOfType pt in pot)
+                        {
+                            Library.ProductType lsp = code.productTypes().Where(m => m.IDLSP == pt.IDLSP).FirstOrDefault();
+                            tam += lsp.Class + " ";
+                        }
+                        <div class="col-lg-3 col-md-4 col-sm-6 mix @tam">
+                            <div class="featured__item">
+                                <div class="featured__item__pic set-bg" data-setbg="/Content/img/product/@item.Image">
+                                    <ul class="featured__item__pic__hover">
+                                        @{
+                                            if (Session["User"] == null)
+                                            {
+                                                <li><a href="/Home/Login"><i class="fa fa-heart"></i></a></li>
+                                            }
+                                            else
+                                            {
+                                                Library.User u = (Library.User)Session["User"];
+                                                Library.LoveProduct lo = code.GetLoveProduct(u.ID, item.IDSP);
+                                                if (lo == null)
+                                                {
+                                                    <li><a href="javascript: love('@item.IDSP')"><i class="fa fa-heart"></i></a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><a href="javascript: love('@item.IDSP')"><i class="fa fa-heart" style="color: red"></i></a></li>
+                                                }
+                                            }
+                                        }
+                                        <li><a href="javascript: addcart('@item.IDSP')"><i class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="featured__item__text">
+                                    <h6><a href="/Home/DetailProduct/@item.IDSP">@item.Name</a></h6>
+                                    <h5>@((int.Parse(item.Cost)-int.Parse(item.Cost)* int.Parse(sale.phantram)*0.01).ToString("#,##0").Replace(",",".")) VNĐ</h5>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    dem++;
+                }
+            }
+
+        </div>
+    </div>
+</section>
+<!-- Featured Section End -->
+<!-- Banner Begin -->
+<div class="banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="banner__pic">
+                    <img src="~/Content/img/banner/banner-1.jpg" alt="">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="banner__pic">
+                    <img src="~/Content/img/banner/banner-2.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Banner End -->
+<!-- Latest Product Section Begin -->
+<section class="latest-product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="latest-product__text">
+                    <h4>Latest Products</h4>
+
+                    <div class="latest-product__slider owl-carousel">
+
+                        <div class="latest-prdouct__slider__item">
+                            @{ dem = 0;
+                                foreach (Library.Product item in sp)
+                                {
+                                    Library.Sale sale = code.GetSale(item.IDKM);
+                                    if (dem < 3)
+                                    {
+                                        <a href="/Home/DetailProduct/@item.IDSP" class="latest-product__item">
+                                            <div class="latest-product__item__pic" style="width: 50%">
+                                                <img src="~/Content/img/product/@item.Image" alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@item.Name</h6>
+                                                <span>@((int.Parse(item.Cost)-int.Parse(item.Cost)* int.Parse(sale.phantram)*0.01).ToString("#,##0").Replace(",",".")) VNĐ</span>
+                                            </div>
+                                        </a>
+                                    }
+                                    dem++;
+                                }
+                            }
+                        </div>
+                        <div class="latest-prdouct__slider__item">
+                            @{ dem = 0;
+                                foreach (Library.Product item in sp)
+                                {
+                                    Library.Sale sale = code.GetSale(item.IDKM);
+                                    if (dem > 2 && dem < 6)
+                                    {
+                                        <a href="/Home/DetailProduct/@item.IDSP" class="latest-product__item">
+                                            <div class="latest-product__item__pic" style="width: 50%">
+                                                <img src="~/Content/img/product/@item.Image" alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@item.Name</h6>
+                                                <span>@((int.Parse(item.Cost)-int.Parse(item.Cost)* int.Parse(sale.phantram)*0.01).ToString("#,##0").Replace(",",".")) VNĐ</span>
+                                            </div>
+                                        </a>
+                                    }
+                                    dem++;
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="latest-product__text">
+                    <h4>Top Rated Products</h4>
+                    <div class="latest-product__slider owl-carousel">
+                        <div class="latest-prdouct__slider__item">
+                            @{ dem = 0;
+                                foreach (Library.Product item in sp)
+                                {
+                                    Library.Sale sale = code.GetSale(item.IDKM);
+                                    if (dem < 3)
+                                    {
+                                        <a href="/Home/DetailProduct/@item.IDSP" class="latest-product__item">
+                                            <div class="latest-product__item__pic" style="width: 50%">
+                                                <img src="~/Content/img/product/@item.Image" alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@item.Name</h6>
+                                                <span>@((int.Parse(item.Cost)-int.Parse(item.Cost)* int.Parse(sale.phantram)*0.01).ToString("#,##0").Replace(",",".")) VNĐ</span>
+                                            </div>
+                                        </a>
+                                    }
+                                    dem++;
+                                }
+                            }
+                        </div>
+                        <div class="latest-prdouct__slider__item">
+                            @{ dem = 0;
+                                foreach (Library.Product item in sp)
+                                {
+                                    Library.Sale sale = code.GetSale(item.IDKM);
+                                    if (dem >= 3 && dem < 6)
+                                    {
+                                        <a href="/Home/DetailProduct/@item.IDSP" class="latest-product__item">
+                                            <div class="latest-product__item__pic" style="width: 50%">
+                                                <img src="~/Content/img/product/@item.Image" alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@item.Name</h6>
+                                                <span>@((int.Parse(item.Cost)-int.Parse(item.Cost)* int.Parse(sale.phantram)*0.01).ToString("#,##0").Replace(",",".")) VNĐ</span>
+                                            </div>
+                                        </a>
+                                    }
+                                    dem++;
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="latest-product__text">
+                    <h4>Review Products</h4>
+                    <div class="latest-product__slider owl-carousel">
+                        <div class="latest-prdouct__slider__item">
+                            @{ dem = 0;
+                                foreach (Library.Product item in sp)
+                                {
+                                    Library.Sale sale = code.GetSale(item.IDKM);
+                                    if (dem < 3)
+                                    {
+                                        <a href="/Home/DetailProduct/@item.IDSP" class="latest-product__item">
+                                            <div class="latest-product__item__pic" style="width: 50%">
+                                                <img src="~/Content/img/product/@item.Image" alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@item.Name</h6>
+                                                <span>@((int.Parse(item.Cost)-int.Parse(item.Cost)* int.Parse(sale.phantram)*0.01).ToString("#,##0").Replace(",",".")) VNĐ</span>
+                                            </div>
+                                        </a>
+                                    }
+                                    dem++;
+                                }
+                            }
+                        </div>
+                        <div class="latest-prdouct__slider__item">
+                            @{ dem = 0;
+                                foreach (Library.Product item in sp)
+                                {
+                                    Library.Sale sale = code.GetSale(item.IDKM);
+                                    if (dem >= 3 && dem < 6)
+                                    {
+                                        <a href="/Home/DetailProduct/@item.IDSP" class="latest-product__item">
+                                            <div class="latest-product__item__pic" style="width: 50%">
+                                                <img src="~/Content/img/product/@item.Image" alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@item.Name</h6>
+                                                <span>@((int.Parse(item.Cost)-int.Parse(item.Cost)* int.Parse(sale.phantram)*0.01).ToString("#,##0").Replace(",",".")) VNĐ</span>
+                                            </div>
+                                        </a>
+                                    }
+                                    dem++;
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Latest Product Section End -->
+<script>
+    function addcart(id) {
+        var form = new FormData();
+        var idsp = id;
+        var soluongmua = 1;
+        form.append("idsp", idsp);
+        form.append("soluong", soluongmua);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/Home/AddCart", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                var json = JSON.parse(xhr.responseText);
+                if (json.Data.status == "OK") {
+                    window.location = "/Home/Cart";
+                } else if (json.Data.status == "ERAm") {
+                    alert("Sản phẩm chỉ còn: " + json.Data.soluongmua);
+                }
+                else {
+                    alert("Add Fail");
+                }
+            }
+        }
+        xhr.send(form);
+    }
+</script>

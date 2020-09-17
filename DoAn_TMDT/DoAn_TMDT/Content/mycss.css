@@ -1,0 +1,32 @@
+﻿.form_login{
+    width: 45%;
+    background-color: rgba(100, 94, 117, 0.274);
+    border: 1px dashed black;
+    margin: 10% auto;
+    text-align: center;
+    padding: 20px;
+    padding-top: 0;
+}
+    .form_login input {
+        outline: none;
+        border: none;
+        background-color: rgba(100, 94, 117, 0.274);
+        border-bottom: 1px solid rgb(160, 17, 17);
+        font-size: 25px;
+    }
+    .form_login input::placeholder{
+        color: gray;
+    }
+    .form_login button{
+        background-color: gray;
+        font-size: 20px;
+        width: 100px;
+        height: 100px;
+        font-weight: 700;
+    }
+    .form_login a{
+        color: gray;
+    }
+body {
+    background-image: url('../Content/Image/BackGround/Grey-Abstract-Wallpaper-16-1920x1080.jpg');
+}

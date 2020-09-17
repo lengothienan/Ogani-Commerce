@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<Library.InforOrder>
+<h2>Chi tiết đơn hàng</h2>
+<div class="table-responsive">
+    <table class="table-bordered table">
+        <tr>
+            <th>Tên sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+        </tr>
+        @{
+            foreach (Library.InforOrder item in Model)
+            {
+                int dongia =int.Parse(item.IntoMoney) / int.Parse(item.Amount);
+                <tr>
+                    @{ 
+                        ActionDB.Code code = new ActionDB.Code();
+                        Library.Product sp = code.GetProduct(item.IDSP);
+                    }
+                    <th>@sp.Name</th>
+                    <th>@item.Amount</th>
+                    <th>@int.Parse(sp.Cost).ToString("#,##0").Replace(",",".") VNĐ</th>
+                     <th>@int.Parse(item.IntoMoney).ToString("#,##0").Replace(",",".") VNĐ</th>
+  
+                  </tr>
+            }
+        }
+    </table>
+</div>
+

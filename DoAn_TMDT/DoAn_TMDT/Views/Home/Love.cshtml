@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Love";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<Library.LoveProduct>
+<section class="breadcrumb-section set-bg" data-setbg="/Content/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>LoveProduct</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/Home/Index">Home</a>
+                        <span>LoveProduct</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="featured spad">
+    <div class="container">
+        <div class="featured__filter">
+            <div class="tab-content" id="product">
+                @{
+                    for (int i = 1; i <= Math.Ceiling((double)Model.Count() / 8); i++)
+                    {
+                        var active = "";
+                        if (i == 1)
+                        {
+                            active = "active";
+                        }
+                        int dem = 0;
+                        <div class="row tab-pane @active" id="tabs-@i" role="tabpanel">
+                            @foreach (Library.LoveProduct item in Model)
+                            {
+                                ActionDB.Code code = new ActionDB.Code();
+                                Library.Product sp = code.GetProduct(item.IDSP);
+                                if (dem >= i * 8 - 8 && dem < i * 8)
+                                {
+                                    <div class="col-lg-3 col-md-4 col-sm-6">
+                                        <div class="featured__item">
+                                            <div class="featured__item__pic set-bg" data-setbg="/Content/img/product/@sp.Image">
+                                                <ul class="featured__item__pic__hover">
+
+                                                    <li><a href="javascript: love('@sp.IDSP')"><i class="fa fa-heart" style="color: red"></i></a></li>
+
+                                                    <li><a href="javascript: addcart('@sp.IDSP')"><i class="fa fa-shopping-cart"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="featured__item__text">
+                                                <h6><a href="/Home/DetailProduct/@sp.IDSP">@sp.Name</a></h6>
+                                                <h5>@((int.Parse(sp.Cost) - int.Parse(sp.Cost) * (int.Parse(sp.IDKM) - 1) * 0.1).ToString("#,##0").Replace(",", ".")) VNĐ</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                dem++;
+                            }
+                            <p align="center" class="col-lg-12 text-center col-sm-12 col-md-12">Trang hiện tại: @i</p>
+                        </div>
+                    }
+
+                }
+            </div>
+        </div>
+        <div class="col-lg-12">
+
+            <ul class="nav nav-tabs" role="tablist">
+                @{
+
+                    for (int i = 1; i <= Math.Ceiling((double)Model.Count() / 8); i++)
+                    {
+                        if (i != 1)
+                        {
+
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-@i" role="tab"
+                                   aria-selected="true">@i</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-@i" role="tab"
+                                   aria-selected="true">@i</a>
+                            </li>
+                        }
+                    }
+
+                }
+            </ul>
+        </div>
+    </div>
+
+</section>
+@section animation{
+    <script>
+
+        var body = $("html, body");
+        body.animate({ scrollTop: 738 });
+    </script>
+}
+
+
+
+

@@ -1,0 +1,12 @@
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\bin\Debug\Library.dll.config
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\bin\Debug\Library.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\bin\Debug\Library.pdb
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\bin\Debug\EntityFramework.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\bin\Debug\EntityFramework.xml
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\obj\Debug\Library.csprojAssemblyReference.cache
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\obj\Debug\Library.csproj.CoreCompileInputs.cache
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\obj\Debug\Library.csproj.CopyComplete
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\obj\Debug\Library.dll
+C:\Users\DELL\source\repos\DoAn_TMDT\Library\obj\Debug\Library.pdb

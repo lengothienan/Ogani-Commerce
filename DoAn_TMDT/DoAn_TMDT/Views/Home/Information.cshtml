@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "Thông tin người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 align="center">Thông tin người dùng</h2>
+<div class="col-lg-12" align="center">
+    <table width="50%">
+        <tr>
+            <th>Tài khoản</th>
+            <th>@ViewBag.Name</th>
+        </tr>
+        <tr>
+            <th>Mật khẩu</th>
+            <th id="pw">******</th>
+        </tr>
+        <tr>
+            <th>Giới tính</th>
+            @{
+                if (ViewBag.Sex == "nam")
+                {
+                    <th>Nam</th>
+
+                }
+                else
+                {
+                    <th>Nữ</th>
+                }
+            }
+        </tr>
+        <tr>
+            <th>SĐT</th>
+            <th id="phone">@ViewBag.Phone</th>
+        </tr>
+        <tr>
+            <th>CMND</th>
+            <th id="id_card">@ViewBag.Address</th>
+        </tr>
+        <tr>
+            <th>Ảnh đại diện</th>
+            <th id="avt"><img id="img_avt" style="width: 100px;height: 100px;" src="~/Content/Image/Members/@ViewBag.avt" /></th>
+        </tr>
+    </table>
+    <br />
+    <div id="btn_change" class="text-center"><button onclick="change()">Sửa</button></div>
+</div>
+@section change{
+    <script>
+    function change() {
+        $("#id_card").html("<input type='text' id='change_idcard' value='@ViewBag.Address'/>");
+        $("#phone").html("<input type='text' id='change_phone' value='@ViewBag.Phone'/>");
+        $("#btn_change").html("<button onclick='save()'>Lưu</button>");
+        }
+        function save() {
+            var phone = $("#change_phone").val();
+            var id_card = $("#change_idcard").val();
+            if (phone == "" || id_card == "") {
+                alert("Vui lòng điền thông tin");
+            } else {
+                var form = new FormData();
+                form.append("phone", phone);
+                form.append("id_card", id_card);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/Home/EditMem", true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var content = xhr.responseText;
+                        var js = JSON.parse(content);
+                        if (js.Data.status == "OK") {
+                            alert("Đã chỉnh sửa thành công!!!");
+                            $("#id_card").html(id_card);
+                            $("#phone").html(phone);
+                            $("#btn_change").html("<button onclick='change()'>Sửa</button>");
+                        } else {
+                            alert("Không đúng điều kiện!!!");
+                        }
+                    }
+                }
+                xhr.send(form);
+            }
+        }
+    </script>
+}
+

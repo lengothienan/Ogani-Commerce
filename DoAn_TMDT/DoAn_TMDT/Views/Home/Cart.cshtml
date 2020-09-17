@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<DoAn_TMDT.Models.CartItem>
+<section class="breadcrumb-section set-bg" data-setbg="/Content/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Shopping Cart</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/Home/Index">Home</a>
+                        <span>Shopping Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shoping Cart Section Begin -->
+<section class="shoping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                @{
+                    if (Model == null || Model.Count() == 0)
+                    {
+                        <h4 align="center">Your shopping cart is empty</h4>
+                    }
+                    else
+                    {
+                        <div class="shoping__cart__table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="shoping__product">Products</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (DoAn_TMDT.Models.CartItem item in Model)
+                                        {
+                                            <tr>
+                                                <td class="shoping__cart__item">
+                                                    <img style="width:100px" src="~/Content/img/product/@item.Hinh" alt="">
+                                                    <h5>@item.TenSanPham</h5>
+
+                                                    <input type="text" value="@item.SanPhamID" name="idsp" hidden style="display: none">
+                                                </td>
+                                                <td class="shoping__cart__price">
+                                                    @int.Parse(item.DonGia).ToString("#,##0").Replace(",", ".") VNĐ
+                                                </td>
+                                                <td class="shoping__cart__quantity">
+                                                    <div class="quantity">
+                                                        <div class="pro-qty">
+                                                            <input type="text" value="@item.SoLuong" name="soluong">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="shoping__cart__total">
+                                                    @item.ThanhTien.ToString("#,##0").Replace(",", ".") VNĐ
+                                                </td>
+                                                <td class="shoping__cart__item__close">
+                                                    <span class="icon_close" onclick="remove('@item.SanPhamID')"></span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__btns">
+                    <a href="/Home/Product" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                    @{
+                        if (Model != null)
+                        {
+                            <a href="javascript: update()" class="primary-btn cart-btn cart-btn-right">
+                                <span class="icon_loading"></span>
+                                Upadate Cart
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                @{
+                    if (Model != null)
+                    {
+                        <div class="shoping__checkout">
+
+                            <h5>Cart Total</h5>
+                            <ul>
+                                <li>Subtotal <span>@Model.Sum(m => m.ThanhTien).ToString("#,##0").Replace(",", ".") VNĐ</span></li>
+                                @if (Model.Sum(m => m.ThanhTien) < 200000)
+                                {
+                                    <li>Fee ship <span>20.000 VNĐ</span></li>
+                                    <li>Total <span>@((Model.Sum(m => m.ThanhTien)+20000).ToString("#,##0").Replace(",",".")) VNĐ</span></li>
+                                }
+                                else
+                                {
+                                    <li>Fee ship <span>Free Ship</span></li>
+                                    <li>Total <span>@(Model.Sum(m => m.ThanhTien).ToString("#,##0").Replace(",",".")) VNĐ</span></li>
+                                }
+                            </ul>
+                            <a href="/Home/CheckOut" class="primary-btn">PROCEED TO CHECKOUT</a>
+
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+@section remove{
+    <script>
+        function update() {
+            var soluong = document.getElementsByName("soluong");
+            var idsp = document.getElementsByName("idsp");
+            if (confirm("Are you wanting to change the quantity?")) {
+                var demthanhcong = 0;
+                for (var i = 0; i < soluong.length; i++) {
+                    if (soluong[i].value != 0) {
+                        var form = new FormData();
+                        form.append("idsp", idsp[i].value);
+                        form.append("soluong", soluong[i].value);
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/Home/UpdateCart", true);
+                        xhr.onreadystatechange = function () {
+                            if (xhr.status == 200 && xhr.readyState == 4) {
+                                var json = JSON.parse(xhr.responseText);
+                                if (json.Data.status == "OK") {
+                                    demthanhcong++;
+                                }
+                            }
+                        }
+                        xhr.send(form);
+                    }
+                }
+                alert("Đã cập nhật thành công");
+                location.reload();
+            }
+        }
+        function remove(id) {
+            if (confirm("Are you trying to remove a product from the shopping cart")) {
+                var form = new FormData();
+                form.append("idsp", id);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/Home/RemovesCart", true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        var json = JSON.parse(xhr.responseText);
+                        if (json.Data.status == "OK") {
+                            alert("Hủy thành công");
+                            location.reload();
+                        }
+                        else {
+                            alert("Remove Fail");
+                        }
+                    }
+                }
+                xhr.send(form);
+            }
+        }
+        var body = $("html, body");
+        body.animate({ scrollTop: 738 });
+ 
+    </script>
+}

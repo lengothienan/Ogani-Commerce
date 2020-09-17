@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="breadcrumb-section set-bg" data-setbg="/Content/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Register</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/Home/Index">Home</a>
+                        <span>Register</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="register-box">
+    <div class="register_form">
+        <span>USERNAME*</span>
+        <input id="uid" type="text" name="username" placeholder="ecommerce2020" />
+
+        <span>PASSWORD*</span>
+        <input id="pw" type="password" name="password" placeholder="************" />
+
+        <span>RETYPE PASSWORD*</span>
+        <input id="pw2" type="password" name="password1" placeholder="************" />
+
+        <span>EMAIL*</span>
+        <input id="email" type="email" name="email" placeholder="abc123@abc.com" />
+
+        <span>ADDRESS*</span>
+        <input id="address" type="text" name="address" placeholder="17 TranPhu St, W.6, D.5, HCM" />
+
+        <input onclick="res()" type="submit" name="submit" value="Register" /><br />
+        <div class="login_user">
+            <a href="/Home/Login">I am already a member</a>
+        </div>
+    </div>
+</div>
+
+@section uploadimg{
+    <script>
+        var body = $("html, body");
+        body.animate({ scrollTop: 738 });
+        function res() {
+            var uid = $("#uid").val();
+            var pw = $("#pw").val();
+            var pw2 = $("#pw2").val();
+            var address = $("#address").val();
+            var email = $("#email").val();
+            if (uid == "" || pw2 == "" || pw == "" || address == "" || email == "") {
+                alert("Vui lòng nhập đầy đủ thông tin!!!");
+            } else if (pw != pw2) {
+                alert("Mật khẩu nhập lại không trùng khớp!!!");
+            } else {
+                var form = new FormData();
+                form.append("uid", uid);
+                form.append("pw", pw);
+                form.append("pw2", pw2);
+                form.append("address", address);
+                form.append("email", email);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/Home/ResObj", true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        var content = xhr.responseText;
+                        var js = JSON.parse(content);
+                        if (js.Data.status == "OK") {
+                            var person = prompt("Please enter your code");
+                            if (person != null) {
+                                if (person == js.Data.code) {
+                                    var xhrs = new XMLHttpRequest();
+                                    xhrs.open("POST", "/Home/Maxacnhan", true);
+                                    xhrs.onreadystatechange = function () {
+                                        if (xhrs.status == 200 && xhrs.readyState == 4) {
+                                            var json = JSON.parse(xhrs.responseText);
+                                            if (json.Data.status == "OK") {
+                                                alert("Đăng kí thành công");
+                                                window.location = "/Home/Login";
+                                            } else if (json.Data.status == "ERR") {
+                                                alert("Tài khoản đã tồn tại!!!");
+                                            } else if (json.Data.status == "ER") {
+                                                alert("Không thỏa điều khoản");
+                                            }
+                                        }
+                                    }
+                                    xhrs.send(form);
+                                } else {
+                                    alert("Mã xác nhận sai");
+                                }
+                            } else {
+                                alert("Mã xác nhận sai");
+                            }
+                        } else if (js.Data.status == "ERR") {
+                            alert("Tài khoản đã tồn tại!!!");
+                        } else if (js.Data.status == "ER") {
+                            alert("Không thỏa điều khoản");
+                        }
+                    }
+                }
+                xhr.send(form);
+            }
+        }
+    </script>
+}
+

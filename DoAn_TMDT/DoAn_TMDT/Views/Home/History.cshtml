@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewBag.Title = "Lịch sử đặt hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<Library.PayOrder>
+<h2 class="text-center">Lịch sử đặt hàng</h2>
+@{
+    if (Model.Count() ==0 )
+    {
+        <p class="text-info text-center">
+            Bạn chưa có đơn hàng nào
+        </p>
+    }
+    else
+    {
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <th></th>
+                    <th>Tên người nhận</th>
+                    <th>Số điện thoại</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+                @foreach (Library.PayOrder item in Model)
+                {
+            <tr id="@item.IDP">
+                <th><a href="/Home/InforOrder/@item.IDP">Chi tiết</a></th>
+                <th>@item.Receiver</th>
+                <th>@item.Phone</th>
+                <th>@item.Address</th>
+                <th>@item.DateOrder</th>
+                <th>@item.Total VNĐ</th>
+                <th>@item.Status</th>
+                @{
+                    if (item.Status == "Chưa xử lý")
+                    {
+                        <th><a onclick="huy('@item.IDP')" class="btn-danger btn">Hủy</a></th>
+                    }
+                    else
+                    {
+                        <th></th>
+                    }
+                }
+            </tr>
+                }
+            </table>
+        </div>
+
+    }
+}
+<script>
+    function huy(idp) {
+        if (confirm("Bạn muốn hủy đơn hàng này?")) {
+
+        var xhr = new XMLHttpRequest();
+        var data = new FormData();
+        data.append("idp", idp);
+        xhr.open("POST", "/Home/CancelIDP", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                var js = JSON.parse(xhr.responseText);
+                if (js.Data.status == "OK") {
+                    $("#" + idp).remove();
+                }
+            }
+        }
+            xhr.send(data);
+        }
+    }
+</script>
