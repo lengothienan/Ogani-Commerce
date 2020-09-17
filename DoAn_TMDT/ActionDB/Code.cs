@@ -103,6 +103,10 @@ namespace ActionDB
         {
             return db.Comments.ToList();
         }
+        public List<Chat> GetChats()
+        {
+            return db.Chats.ToList();
+        }
         public void sendmail(string ToEmailAddress, string subject, string content)
         {
             var FromEmailAddress = ConfigurationManager.AppSettings["FromEmailAddress"].ToString();

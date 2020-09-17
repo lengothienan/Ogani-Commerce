@@ -1733,6 +1733,7 @@
     <Content Include="Content\fontawesome-free-5.11.2-web\webfonts\fa-solid-900.svg" />
     <Content Include="Content\fonts\ElegantIcons.svg" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\Image\BackGround\chat.png" />
     <Content Include="Content\Image\BackGround\Color-PNG-Clipart.png" />
     <Content Include="Content\Image\BackGround\fb-icon-btn.png" />
     <Content Include="Content\Image\BackGround\gplus-icons-btn.png" />

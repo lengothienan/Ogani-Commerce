@@ -724,8 +724,123 @@ namespace DoAn_TMDT.Controllers
         }
         public ActionResult InforOrder()
         {
-            ViewBag.Title = "ABC";
             return View();
+        }
+        public JsonResult JSChat(FormCollection data)
+        {
+            JsonResult json = new JsonResult();
+            if (data == null)
+            {
+                Response.Redirect("/Home/Index");
+            }
+            string thutu = data["thutu"];
+            Code code = new Code();
+            Chat chat = code.GetChats().Where(m=>m.IDChat==thutu).FirstOrDefault();
+            if (Session["User"] != null)
+            {
+                User u =(User) Session["User"];
+                if(chat!= null)
+                {
+                    if(chat.ToWho ==u.UID || chat.FromWho == u.UID)
+                    {
+                        if(chat.FromWho == u.UID)
+                        {
+                            json.Data = new
+                            {
+                                status = "OK",
+                                Name = u.UID,
+                                Mess = chat.Mess,
+                                Time = chat.Time
+                            };
+                        }
+                        if (chat.ToWho == u.UID)
+                        {
+                            json.Data = new
+                            {
+                                status = "OK",
+                                Name = "Admin",
+                                Mess = chat.Mess,
+                                Time = chat.Time
+                            };
+                        }
+                    }
+                    else
+                    {
+                        json.Data = new
+                        {
+                            status = "OKK"
+                        };
+                    }
+                }
+                else
+                {
+                    Chat chatlast = code.GetChats().LastOrDefault();
+                    if (int.Parse(thutu) < int.Parse(chatlast.IDChat))
+                    {
+                        json.Data = new
+                        {
+                            status = "OKK"
+                        };
+                    }
+                    else
+                    {
+                        json.Data = new
+                        {
+                            status = "ER"
+                        };
+                    }
+                }
+            }
+            else
+            {
+                json.Data = new
+                {
+                    status = "ER"
+                };
+            }
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult SendMess(FormCollection data)
+        {
+            JsonResult json = new JsonResult();
+            if (data == null)
+            {
+                Response.Redirect("/Home/Index");
+            }
+            string text = data["text"];
+            Code code = new Code();
+            Chat comment = code.GetChats().OrderBy(m => int.Parse(m.IDChat)).LastOrDefault();
+            if (Session["User"] != null)
+            {
+                Chat cm = new Chat();
+                User user = (User)Session["User"];
+                if (comment!=null) { 
+                cm.IDChat = (int.Parse(comment.IDChat) +1).ToString();
+                }
+                else
+                {
+                    cm.IDChat = "1";
+                }
+                string[] date = DateTime.Now.ToString().Split(' ');
+                cm.FromWho = user.UID;
+                cm.Mess = text;
+                cm.ToWho = "admin";
+                cm.Time = date[1]+date[2];
+                code.AddObject(cm);
+                code.Save();
+                json.Data = new
+                {
+                    status = "OK"
+                };
+            }
+            else
+            {
+                json.Data = new
+                {
+                    status = "ER"
+                };
+            }
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
     }
 }

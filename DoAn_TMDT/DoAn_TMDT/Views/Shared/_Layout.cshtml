@@ -65,361 +65,508 @@
                         else
                         {
                             Library.User user = (Library.User)Session["User"]; ActionDB.Code c = new ActionDB.Code();<a href="/Home/Love"><i class="fa fa-heart"></i> <span>@c.GetLoveProducts(user.ID).Count()</span></a> } }
-            </li>
-            <li>
-                <a href="/Home/Cart">
-                    <i class="fa fa-shopping-bag"></i> @{
+                </li>
+                <li>
+                    <a href="/Home/Cart">
+                        <i class="fa fa-shopping-bag"></i> @{
+                            if (Session["Cart"] != null)
+                            {
+                                List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
+                                <span>
+                                    @giohang.Sum(m => m.SoLuong)
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    0
+                                </span>
+                            }
+
+                        }
+                    </a>
+                </li>
+            </ul>
+            <div class="header__cart__price">
+                item: <span>
+                    @{
                         if (Session["Cart"] != null)
                         {
                             List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
                             <span>
-                                @giohang.Sum(m => m.SoLuong)
+                                @((giohang.Sum(m => m.ThanhTien)).ToString("#,##0").Replace(",",".")) VNĐ
                             </span>
                         }
                         else
                         {
                             <span>
-                                0
+                                0 VNĐ
                             </span>
                         }
 
                     }
-                </a>
-            </li>
-        </ul>
-        <div class="header__cart__price">
-            item: <span>
+                </span>
+            </div>
+        </div>
+        <div class="humberger__menu__widget">
+            <div class="header__top__right__auth">
                 @{
-                    if (Session["Cart"] != null)
+                    if (Session["User"] == null)
                     {
-                        List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
-                        <span>
-                            @((giohang.Sum(m => m.ThanhTien)).ToString("#,##0").Replace(",",".")) VNĐ
-                        </span>
+                        <a href="/Home/Login" id="se">Login</a>
+                        <a href="/Home/Res">Register</a>
                     }
                     else
                     {
-                        <span>
-                            0 VNĐ
-                        </span>
+                        <a href="/Home/Logout" id="se">Logout</a>
                     }
-
                 }
-            </span>
+            </div>
+        </div>
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                <li class="active"><a href="/Home/Index">Home</a></li>
+                <li><a href="/Home/Product">Shop</a></li>
+                <li>
+                    <a href="#">Pages</a>
+                    <ul class="header__menu__dropdown">
+                        <li><a href="/Home/Love">Favorite product</a></li>
+                        <li><a href="/Home/Cart">Shoping Cart</a></li>
+                        <li><a href="/Home/CheckOut">Check Out</a></li>
+                    </ul>
+                </li>
+                <li><a href="/Home/Contact">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="mobile-menu-wrap"></div>
+        <div class="humberger__menu__contact">
+            <ul>
+                <li><i class="fa fa-envelope"></i> lengothienan9a2@gmail.com</li>
+                <li>Free Shipping for all Order of 200.000 VNĐ</li>
+            </ul>
         </div>
     </div>
-    <div class="humberger__menu__widget">
-        <div class="header__top__right__auth">
-            @{
-                if (Session["User"] == null)
-                {
-                    <a href="/Home/Login" id="se">Login</a>
-                    <a href="/Home/Res">Register</a>
-                }
-                else
-                {
-                    <a href="/Home/Logout" id="se">Logout</a>
-                }
-            }
-        </div>
-    </div>
-    <nav class="humberger__menu__nav mobile-menu">
-        <ul>
-            <li class="active"><a href="/Home/Index">Home</a></li>
-            <li><a href="/Home/Product">Shop</a></li>
-            <li>
-                <a href="#">Pages</a>
-                <ul class="header__menu__dropdown">
-                    <li><a href="/Home/Love">Favorite product</a></li>
-                    <li><a href="/Home/Cart">Shoping Cart</a></li>
-                    <li><a href="/Home/CheckOut">Check Out</a></li>
-                </ul>
-            </li>
-            <li><a href="/Home/Contact">Contact</a></li>
-        </ul>
-    </nav>
-    <div id="mobile-menu-wrap"></div>
-    <div class="humberger__menu__contact">
-        <ul>
-            <li><i class="fa fa-envelope"></i> lengothienan9a2@gmail.com</li>
-            <li>Free Shipping for all Order of 200.000 VNĐ</li>
-        </ul>
-    </div>
-</div>
-<!-- Humberger End -->
-<!-- Header Section Begin -->
-<header class="header">
-    <div class="header__top">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <div class="header__top__left">
-                        <ul>
-                            <li><i class="fa fa-envelope"></i> lengothienan9a2@gmail.com</li>
-                            <li>Free Shipping for all Order of 200.000 VNĐ</li>
-                        </ul>
+    <!-- Humberger End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__left">
+                            <ul>
+                                <li><i class="fa fa-envelope"></i> lengothienan9a2@gmail.com</li>
+                                <li>Free Shipping for all Order of 200.000 VNĐ</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="header__top__right">
-                        <div class="header__top__right__auth">
-                            @{
-                                if (Session["User"] == null)
-                                {
-                                    <a href="/Home/Login" id="se">Login</a>
-                                    <a href="/Home/Res">Register</a>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__right">
+                            <div class="header__top__right__auth">
+                                @{
+                                    if (Session["User"] == null)
+                                    {
+                                        <a href="/Home/Login" id="se">Login</a>
+                                        <a href="/Home/Res">Register</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/Home/Logout" id="se">Logout</a>
+                                    }
                                 }
-                                else
-                                {
-                                    <a href="/Home/Logout" id="se">Logout</a>
-                                }
-                            }
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="header__logo">
-                    <a href="/Home/Index"><img src="~/Content/img/logo.png" alt=""></a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a href="/Home/Index"><img src="~/Content/img/logo.png" alt=""></a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <nav class="header__menu">
-                    <ul>
-                        <li class="active"><a href="/Home/Index">Home</a></li>
-                        <li><a href="/Home/Product">Shop</a></li>
-                        <li>
-                            <a>Pages</a>
-                            <ul class="header__menu__dropdown">
-                                <li><a href="/Home/Love">Favorite product</a></li>
-                                <li><a href="/Home/Cart">Shoping Cart</a></li>
-                                <li><a href="/Home/CheckOut">Check Out</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/Home/Contact">Contact</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="col-lg-3">
-                <div class="header__cart">
-                    <ul>
-                        <li>
-                            @{ if (Session["User"] == null)
-                                {<a href="/Home/Login"><i class="fa fa-heart"></i><span>0</span></a> }
-                                else
-                                {
-                                    Library.User user = (Library.User)Session["User"]; ActionDB.Code c = new ActionDB.Code();<a href="/Home/Love"><i class="fa fa-heart"></i> <span>@c.GetLoveProducts(user.ID).Count()</span></a> } }
-                        </li>
-                        <li>
-                            <a href="/Home/Cart">
-                                <i class="fa fa-shopping-bag"></i> @{
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="/Home/Index">Home</a></li>
+                            <li><a href="/Home/Product">Shop</a></li>
+                            <li>
+                                <a>Pages</a>
+                                <ul class="header__menu__dropdown">
+                                    <li><a href="/Home/Love">Favorite product</a></li>
+                                    <li><a href="/Home/Cart">Shoping Cart</a></li>
+                                    <li><a href="/Home/CheckOut">Check Out</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/Home/Contact">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__cart">
+                        <ul>
+                            <li>
+                                @{ if (Session["User"] == null)
+                                    {<a href="/Home/Login"><i class="fa fa-heart"></i><span>0</span></a> }
+                                    else
+                                    {
+                                        Library.User user = (Library.User)Session["User"]; ActionDB.Code c = new ActionDB.Code();<a href="/Home/Love"><i class="fa fa-heart"></i> <span>@c.GetLoveProducts(user.ID).Count()</span></a> } }
+                            </li>
+                            <li>
+                                <a href="/Home/Cart">
+                                    <i class="fa fa-shopping-bag"></i> @{
+                                        if (Session["Cart"] != null)
+                                        {
+                                            List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
+                                            <span>
+                                                @giohang.Sum(m => m.SoLuong)
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                0
+                                            </span>
+                                        }
+
+                                    }
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="header__cart__price">
+                            item: <span>
+                                @{
                                     if (Session["Cart"] != null)
                                     {
                                         List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
                                         <span>
-                                            @giohang.Sum(m => m.SoLuong)
+                                            @((giohang.Sum(m => m.ThanhTien)).ToString("#,##0").Replace(",",".")) VNĐ
                                         </span>
                                     }
                                     else
                                     {
                                         <span>
-                                            0
+                                            0 VNĐ
                                         </span>
                                     }
 
                                 }
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="header__cart__price">
-                        item: <span>
-                            @{
-                                if (Session["Cart"] != null)
-                                {
-                                    List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
-                                    <span>
-                                        @((giohang.Sum(m => m.ThanhTien)).ToString("#,##0").Replace(",",".")) VNĐ
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span>
-                                        0 VNĐ
-                                    </span>
-                                }
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+    <!-- Hero Section Begin -->
+    <section class="hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="hero__categories">
+                        <div class="hero__categories__all">
+                            <i class="fa fa-bars"></i>
+                            <span>All departments</span>
+                        </div>
+                        <ul>
 
+                            @{
+                                ActionDB.Code code = new ActionDB.Code();
+                                List<Library.ProductType> lsp = code.productTypes();
+                                foreach (Library.ProductType item in lsp)
+                                {
+                                    <li><a href="/Home/Product/@item.IDLSP">@item.Name</a></li>
+                                }
                             }
-                        </span>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="hero__search">
+                        <div class="hero__search__phone">
+                            <div class="hero__search__phone__icon">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                            <div class="hero__search__phone__text">
+                                <h5>0908569600</h5>
+                                <span>support 24/7 time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero__item set-bg" data-setbg="/Content/img/hero/banner.jpg">
+                        <div class="hero__text">
+                            <span>FRUIT FRESH</span>
+                            <h2>Vegetable <br />100% Organic</h2>
+                            <p>Free Pickup and Delivery Available</p>
+                            <a href="/Home/Product" class="primary-btn">SHOP NOW</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="humberger__open">
-            <i class="fa fa-bars"></i>
-        </div>
-    </div>
-</header>
-<!-- Header Section End -->
-<!-- Hero Section Begin -->
-<section class="hero">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="hero__categories">
-                    <div class="hero__categories__all">
-                        <i class="fa fa-bars"></i>
-                        <span>All departments</span>
+    </section>
+    @RenderBody();
+    <!-- Hero Section End -->
+    <!-- Categories Section Begin -->
+    <!-- Blog Section End -->
+    <!-- Footer Section Begin -->
+    <footer class="footer spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__about__logo">
+                            <a href="/Home/Index"><img src="~/Content/img/logo.png" alt=""></a>
+                        </div>
+                        <ul>
+                            <li>Address: District 4, Ho Chi Minh City</li>
+                            <li>Phone: 0908569600</li>
+                            <li>Email: lengothienan9a2@gmail.com</li>
+                        </ul>
                     </div>
-                    <ul>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
+                    <div class="footer__widget">
+                        <h6>Useful Links</h6>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">About Our Shop</a></li>
+                            <li><a href="#">Secure Shopping</a></li>
+                            <li><a href="#">Delivery infomation</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Our Sitemap</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="#">Who We Are</a></li>
+                            <li><a href="#">Our Services</a></li>
+                            <li><a href="#">Projects</a></li>
+                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">Innovation</a></li>
+                            <li><a href="#">Testimonials</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <div class="footer__widget">
+                        <h6>Join Our Newsletter Now</h6>
+                        <p>Get E-mail updates about our latest shop and special offers.</p>
+                        <form action="#">
+                            <input type="text" placeholder="Enter your mail">
+                            <button type="submit" class="site-btn">Subscribe</button>
+                        </form>
+                        <div class="footer__widget__social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer__copyright">
+                        <div class="footer__copyright__text">
+                            <p>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </p>
+                        </div>
+                        <div class="footer__copyright__payment"><img src="~/Content/img/payment-item.png" alt=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div id='chat'>
+        <p align='center'> <i class='fab fa-facebook-messenger'></i> Liên hệ tư vấn</p>
+        <div id='messages'></div>
+        <div id='form'><input type='text' autocomplete='off' id='message' style='width: 80%'><input id='gui' style='width: 18%' type='submit' value='Gửi'></div>
+    </div>
+    <!-- Footer Section End -->
+    <!-- Js Plugins -->
+    <script src="~/Content/js/jquery-3.3.1.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/jquery.nice-select.min.js"></script>
+    <script src="~/Content/js/jquery-ui.min.js"></script>
+    <script src="~/Content/js/jquery.slicknav.js"></script>
+    <script src="~/Content/js/mixitup.min.js"></script>
+    <script src="~/Content/js/owl.carousel.min.js"></script>
+    <script src="~/Content/js/main.js"></script>
 
-                        @{
-                            ActionDB.Code code = new ActionDB.Code();
-                            List<Library.ProductType> lsp = code.productTypes();
-                            foreach (Library.ProductType item in lsp)
-                            {
-                                <li><a href="/Home/Product/@item.IDLSP">@item.Name</a></li>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    @RenderSection("search", required: false)
+    @RenderSection("change", required: false)
+    @RenderSection("uploadimg", required: false)
+    @RenderSection("upload", required: false)
+    @RenderSection("addcart", required: false)
+    @RenderSection("remove", required: false)
+    @RenderSection("animation", required: false)
+    @{
+        int tien = 0;
+        if (Session["Cart"] != null)
+        {
+            List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
+            tien = giohang.Sum(m => m.ThanhTien);
+        }
+    }
+    <style>
+        #chat {
+            position: fixed;
+            bottom: 5px;
+            right: 20px;
+            width: 200px;
+            height: 30px;
+            cursor: pointer;
+            border: 1px solid black;
+            z-index: 100;
+            background-image: url('/Content/Image/BackGround/chat.png');
+        }
+
+            #chat p {
+                line-height: 30px;
+                background-color: darkcyan;
+                color: black;
+            }
+
+    #messages { height: 170px; overflow-y: scroll; padding: 10px; display: inline-block; width: 99%;  }
+
+        #form input {
+            font-size: 1rem;
+            appearance: none;
+            -webkit-apperance: none;
+            border: 1px solid black;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .msg {
+            color: black;
+            background-color: rgb(180, 214, 111);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            width: fit-content;
+        }
+
+            .msg p {
+                padding: 0 5px;
+                border-radius: 3px;
+                margin: 0;
+                font-weight: bold;
+                width: fit-content;
+                color: black;
+            }
+
+            .msg span {
+                font-size: 0.7rem;
+                margin-left: 15px;
+            }
+    </style>
+    <script>
+            var hide = 0;
+            $("#chat p").click(function () {
+                hide++;
+                if (hide % 2 != 0) {
+                    $("#chat").css("height", "250px");
+                    $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });
+                } else {
+                    $("#chat").css("height", "30px");
+                }
+            });
+            $('#message').keypress(function (event) {
+                var x = event.which || event.keyCode;
+                if (x == 13) {
+                    var form = new FormData();
+                    var text = $('#message').val();
+                    if (text != "") {
+                        form.append("text", text);
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/Home/SendMess", true);
+                        xhr.onreadystatechange = function () {
+                            if (xhr.status == 200 && xhr.readyState == 4) {
+                                var json = JSON.parse(xhr.responseText);
+                                if (json.Data.status == "OK") {
+                                    $("#message").val("");
+                                    $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });
+                                }
+                                else {
+                                    $("#message").val("");
+                                    alert("Mess Fail");
+                               }
                             }
                         }
+                        xhr.send(form);
+                    } else {
+                        alert("Vui lòng nhập thông tin");
+                    }
+                    $('#message').val('');
+                }
+            });
+            $("#gui").click(function () {
+                var form = new FormData();
+                var text = $('#message').val();
+                if (text != "") {
+                    form.append("text", text);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/Home/SendMess", true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.status == 200 && xhr.readyState == 4) {
+                            var json = JSON.parse(xhr.responseText);
+                            if (json.Data.status == "OK") {
+                                $("#message").val("");
+                                $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });
+                            }
+                            else {
+                                $("#message").val("");
+                                alert("Mess Fail");
+                            }
+                        }
+                    }
+                    xhr.send(form);
+                } else {
+                    alert("Vui lòng nhập thông tin");
+                }
+                $('#message').val('');
+            });
+        window.setTimeout("Mess(1)", 0);
+        function Mess(thutu) {
+            var form = new FormData();
+            form.append("thutu", thutu);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Home/JSChat", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.status == 200 && xhr.readyState == 4) {
+                    var js = JSON.parse(xhr.responseText);
+                    if (js.Data.status == "OK") {
+                        $("#messages").append("<div class='msg'><p>" + js.Data.Name + "</p>" + js.Data.Mess + "<span>" + js.Data.Time + "</span></div>");
+                        setTimeout("Mess(" + (thutu - 1 + 2) + ")", 0);
+                    } else if (js.Data.status == "OKK") {
+                        setTimeout("Mess(" + (thutu - 1 + 2) + ")", 0);
+                    } else {
+                        setTimeout("Mess(" + thutu  + ")", 0);
+                    }
+                }
+            }
+            xhr.send(form);
+        }
 
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-9">
-                <div class="hero__search">
-                    <div class="hero__search__phone">
-                        <div class="hero__search__phone__icon">
-                            <i class="fa fa-phone"></i>
-                        </div>
-                        <div class="hero__search__phone__text">
-                            <h5>0908569600</h5>
-                            <span>support 24/7 time</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero__item set-bg" data-setbg="/Content/img/hero/banner.jpg">
-                    <div class="hero__text">
-                        <span>FRUIT FRESH</span>
-                        <h2>Vegetable <br />100% Organic</h2>
-                        <p>Free Pickup and Delivery Available</p>
-                        <a href="/Home/Product" class="primary-btn">SHOP NOW</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-@RenderBody();
-<!-- Hero Section End -->
-<!-- Categories Section Begin -->
-<!-- Blog Section End -->
-<!-- Footer Section Begin -->
-<footer class="footer spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="footer__about">
-                    <div class="footer__about__logo">
-                        <a href="/Home/Index"><img src="~/Content/img/logo.png" alt=""></a>
-                    </div>
-                    <ul>
-                        <li>Address: District 4, Ho Chi Minh City</li>
-                        <li>Phone: 0908569600</li>
-                        <li>Email: lengothienan9a2@gmail.com</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
-                <div class="footer__widget">
-                    <h6>Useful Links</h6>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">About Our Shop</a></li>
-                        <li><a href="#">Secure Shopping</a></li>
-                        <li><a href="#">Delivery infomation</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Our Sitemap</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="#">Who We Are</a></li>
-                        <li><a href="#">Our Services</a></li>
-                        <li><a href="#">Projects</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Innovation</a></li>
-                        <li><a href="#">Testimonials</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <div class="footer__widget">
-                    <h6>Join Our Newsletter Now</h6>
-                    <p>Get E-mail updates about our latest shop and special offers.</p>
-                    <form action="#">
-                        <input type="text" placeholder="Enter your mail">
-                        <button type="submit" class="site-btn">Subscribe</button>
-                    </form>
-                    <div class="footer__widget__social">
-                        <a href="#"><i class="fa fa-facebook"></i></a>
-                        <a href="#"><i class="fa fa-instagram"></i></a>
-                        <a href="#"><i class="fa fa-twitter"></i></a>
-                        <a href="#"><i class="fa fa-pinterest"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="footer__copyright">
-                    <div class="footer__copyright__text">
-                        <p>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
-                            <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
-                    </div>
-                    <div class="footer__copyright__payment"><img src="~/Content/img/payment-item.png" alt=""></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- Footer Section End -->
-<!-- Js Plugins -->
-<script src="~/Content/js/jquery-3.3.1.min.js"></script>
-<script src="~/Content/js/bootstrap.min.js"></script>
-<script src="~/Content/js/jquery.nice-select.min.js"></script>
-<script src="~/Content/js/jquery-ui.min.js"></script>
-<script src="~/Content/js/jquery.slicknav.js"></script>
-<script src="~/Content/js/mixitup.min.js"></script>
-<script src="~/Content/js/owl.carousel.min.js"></script>
-<script src="~/Content/js/main.js"></script>
-
-
-
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
-@RenderSection("scripts", required: false)
-@RenderSection("search", required: false)
-@RenderSection("change", required: false)
-@RenderSection("uploadimg", required: false)
-@RenderSection("upload", required: false)
-@RenderSection("addcart", required: false)
-@RenderSection("remove", required: false)
-    @RenderSection("animation",required: false)
-@{
-    int tien = 0;
-    if (Session["Cart"] != null)
-    {
-        List<DoAn_TMDT.Models.CartItem> giohang = Session["Cart"] as List<DoAn_TMDT.Models.CartItem>;
-        tien = giohang.Sum(m => m.ThanhTien);
-    }
-}
-<script>
-
+        /*
+                return "<div class='msg'><p>" + item.from1 + "</p>" + item.mess + "<span>" + time + "</span></div>";
+                $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });s*/
         window.setTimeout("checkSession()", 0);
         function checkSession() {
             var usersess = $("#se").html();
@@ -502,6 +649,6 @@
             }
             xhr.send(form);
     }
-</script>
+    </script>
 </body>
 </html>
