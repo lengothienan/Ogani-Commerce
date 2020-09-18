@@ -4,5 +4,125 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>History</h2>
-
+@model List<Library.PayOrder>
+<section class="breadcrumb-section set-bg" data-setbg="/Content/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>History</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/Home/Index">Home</a>
+                        <span>History</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shoping Cart Section Begin -->
+<section class="shoping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                @{
+                    if (Model == null || Model.Count() == 0)
+                    {
+                        <h4 align="center">Your Order is empty</h4>
+                    }
+                    else
+                    {
+                        <div class="shoping__cart__table">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="shoping__product">ID</th>
+                                        <th>Reciever</th>
+                                        <th>Address</th>
+                                        <th>Phone</th>
+                                        <th>Date Order</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>StatusPay</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int dem = 0;
+                                        foreach (Library.PayOrder item in Model)
+                                        {
+                                            dem++;
+                                            <tr id="donhang_@item.IDP">
+                                                <th class="shoping__cart__quantity">
+                                                    <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
+                                                </th>
+                                                <th class="shoping__cart__item">
+                                                    @item.Receiver
+                                                </th>
+                                                <th class="shoping__cart__item">
+                                                    @item.Address
+                                                </th>
+                                                <th class="shoping__cart__item">
+                                                    @item.Phone
+                                                </th>
+                                                <th class="shoping__cart__item">
+                                                    @item.DateOrder
+                                                </th>
+                                                <th class="shoping__cart__item">
+                                                    @int.Parse(item.Total).ToString("#,##0").Replace(",", ".") VNĐ
+                                                </th>
+                                                <th class="shoping__cart__item">
+                                                    @item.Status
+                                                </th>
+                                                <th class="shoping__cart__item">
+                                                    @item.StatusPay
+                                                </th>
+                                                @if (item.Status != "Đã giao")
+                                                {
+                                                    <th><a class="btn-danger btn" href="javascript: Canceldh('@item.IDP')">Hủy</a></th>
+                                                }
+                                                else
+                                                {
+                                                    <th></th>
+                                                }
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+@section huydonhang{
+    <script>
+        function Canceldh(id) {
+            if (confirm("Bạn có muốn hủy đơn hàng?")) {
+                var form = new FormData();
+                form.append("idp", id);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/Home/RemoveOrder", true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        var json = JSON.parse(xhr.responseText);
+                        if (json.Data.status == "OK") {
+                            $("#donhang_" + id).remove();
+                            alert("Delete Success");
+                        }
+                        else {
+                            alert("Delete Fail");
+                        }
+                    }
+                }
+                xhr.send(form);
+            }
+        }
+        var body = $("html, body");
+        body.animate({ scrollTop: 738 });
+    </script>
+}

@@ -133,6 +133,7 @@
                         <li><a href="/Home/Love">Favorite product</a></li>
                         <li><a href="/Home/Cart">Shoping Cart</a></li>
                         <li><a href="/Home/CheckOut">Check Out</a></li>
+                        <li><a href="/Home/History">History</a></li>
                     </ul>
                 </li>
                 <li><a href="/Home/Contact">Contact</a></li>
@@ -198,6 +199,7 @@
                                     <li><a href="/Home/Love">Favorite product</a></li>
                                     <li><a href="/Home/Cart">Shoping Cart</a></li>
                                     <li><a href="/Home/CheckOut">Check Out</a></li>
+                                    <li><a href="/Home/History">History</a></li>
                                 </ul>
                             </li>
                             <li><a href="/Home/Contact">Contact</a></li>
@@ -401,7 +403,7 @@
     <script src="~/Content/js/jquery.slicknav.js"></script>
     <script src="~/Content/js/mixitup.min.js"></script>
     <script src="~/Content/js/owl.carousel.min.js"></script>
-    <script src="~/Content/js/main.js"></script>
+    <script src="~/Content/js/index.js"></script>
 
 
 
@@ -415,6 +417,7 @@
     @RenderSection("addcart", required: false)
     @RenderSection("remove", required: false)
     @RenderSection("animation", required: false)
+    @RenderSection("huydonhang",required: false)
     @{
         int tien = 0;
         if (Session["Cart"] != null)
@@ -505,7 +508,7 @@
                                 }
                                 else {
                                     $("#message").val("");
-                                    alert("Mess Fail");
+                                    alert("Vui lòng đăng nhập");
                                }
                             }
                         }
@@ -532,7 +535,7 @@
                             }
                             else {
                                 $("#message").val("");
-                                alert("Mess Fail");
+                                alert("Bạn cần đăng nhập");
                             }
                         }
                     }
@@ -563,10 +566,6 @@
             }
             xhr.send(form);
         }
-
-        /*
-                return "<div class='msg'><p>" + item.from1 + "</p>" + item.mess + "<span>" + time + "</span></div>";
-                $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });s*/
         window.setTimeout("checkSession()", 0);
         function checkSession() {
             var usersess = $("#se").html();

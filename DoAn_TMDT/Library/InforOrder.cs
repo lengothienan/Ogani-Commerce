@@ -25,6 +25,9 @@ namespace Library
         [StringLength(255)]
         public string IntoMoney { get; set; }
 
+        [StringLength(255)]
+        public string price { get; set; }
+
         public virtual PayOrder PayOrder { get; set; }
 
         public virtual Product Product { get; set; }

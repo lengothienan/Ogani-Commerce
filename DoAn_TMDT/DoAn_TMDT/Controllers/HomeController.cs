@@ -281,10 +281,34 @@ namespace DoAn_TMDT.Controllers
             else
             {
                 List<Product> products = code.GetProductSearch(text).Where(m => int.Parse(m.Cost) >= min && int.Parse(m.Cost) <= max).ToList();
+                string[] love=new string[products.Count()];
+                int dem = 0;
+                foreach(Product item in products)
+                {
+                    if (Session["User"] != null)
+                    {
+                        User u = (User)Session["User"];
+                        LoveProduct lo = code.GetLoveProduct(u.ID,item.IDSP);
+                        if (lo == null)
+                        {
+                            love[dem] = "not";
+                        }
+                        else
+                        {
+                            love[dem] = "yes";
+                        }
+                    }
+                    else
+                    {
+                        love[dem] = "null";
+                    }
+                    dem++;
+                }
                 js.Data = new
                 {
                     status = "OK",
                     product = products,
+                    love = love
                 };
             }
             return Json(js, JsonRequestBehavior.AllowGet);
@@ -720,11 +744,30 @@ namespace DoAn_TMDT.Controllers
         }
         public ActionResult History()
         {
-            return View();
+            if (Session["User"] == null)
+            {
+                Response.Redirect("/Home/Login");
+            }
+            User u = (User)Session["User"];
+            Code code = new Code();
+            List<PayOrder> pay = code.GetPayOrder(u.ID);
+            return View(pay);
         }
-        public ActionResult InforOrder()
+        public ActionResult InforOrder(string id)
         {
-            return View();
+            if (Session["User"] == null)
+            {
+                Response.Redirect("/Home/Index");
+            }
+            User u = (User)Session["User"];
+            Code code = new Code();
+            PayOrder pay = code.GetPayOrderOne(id);
+            List<InforOrder> inf= code.GetInforOrders(id);
+            if (pay.UID != u.ID)
+            {
+                Response.Redirect("/Home/Index");
+            }
+            return View(inf);
         }
         public JsonResult JSChat(FormCollection data)
         {
@@ -841,6 +884,162 @@ namespace DoAn_TMDT.Controllers
                 };
             }
             return Json(json, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult Order(FormCollection data)
+        {
+            if (data == null)
+            {
+                Response.Redirect("/Home/Index");
+            }
+            JsonResult json = new JsonResult();
+            List<CartItem> giohang = Session["Cart"] as List<CartItem>;
+            Code code = new Code();
+            int dem = 0;
+            foreach(CartItem item in giohang)
+            {
+                Product product = code.GetProduct(item.SanPhamID);
+                if (int.Parse(product.Amount) >= item.SoLuong)
+                {
+                    dem++;
+                }
+                else
+                {
+                    if (int.Parse(product.Amount) == 0)
+                    {
+                        CartItem itemXoa = giohang.FirstOrDefault(m => m.SanPhamID == item.SanPhamID);
+                        if (itemXoa != null)
+                        {
+                            giohang.Remove(itemXoa);
+                        }
+                    }
+                    else
+                    {
+                        CartItem itemXoa = giohang.FirstOrDefault(m => m.SanPhamID == item.SanPhamID);
+                        if (itemXoa != null)
+                        {
+                            itemXoa.SoLuong= int.Parse(product.Amount);
+                        }
+                    }
+                    
+                }
+            }
+            if (dem != giohang.Count())
+            {
+                json.Data = new
+                {
+                    status = "Full"
+                };
+            }
+            else
+            {
+                if (Session["Cart"] != null)
+                {
+                    string fistname = data["fistname"];
+                    string lastname = data["lastname"];
+                    string street = data["street"];
+                    string quan = data["quan"];
+                    string city = data["city"];
+                    string phone = data["phone"];
+                    string note = data["note"];
+                    string country = data["country"];
+                    User u = (User)Session["User"];
+                    PayOrder pay = new PayOrder();
+                    string content = "Bạn vừa mới đặt hàng: ";
+                    pay.IDP = Guid.NewGuid().ToString();
+                    pay.UID = u.ID;
+                    pay.Address = street + " " + quan + " " + city + " " + country;
+                    pay.Phone = phone;
+                    pay.Note = note;
+                    pay.Receiver = fistname + " " +lastname ;
+                    pay.Status = "Đang xử lý";
+                    pay.StatusPay = "Chưa thanh toán";
+                    if (giohang.Sum(m => m.ThanhTien) >= 200000) {
+                        pay.Total = giohang.Sum(m => m.ThanhTien).ToString();
+                    }
+                    else
+                    {
+                        pay.Total = (giohang.Sum(m => m.ThanhTien)+20000).ToString();
+                    }
+                    pay.DateOrder = DateTime.Now.ToString();
+                    code.AddObject(pay);
+                    code.Save();
+                    content +="Người nhận: " +pay.Receiver + ". Địa chỉ: " + pay.Address + ". SĐT: " + pay.Phone + ".Ghi chú: " + pay.Note + ".Tổng tiền: " + int.Parse(pay.Total).ToString("#,##0").Replace(",",".") + "VNĐ. Thời gian đặt: " + pay.DateOrder+ ". Cảm ơn đã đặt hàng của chúng tôi.";
+                    code.sendmail("tuanhung23042001@gmail.com", "Hóa đơn",content);
+                    json.Data = new
+                    {
+                        status = "OK"
+                    };
+                    foreach(CartItem item in giohang)
+                    {
+                        Product product = code.GetProduct(item.SanPhamID);
+                        product.Amount = (int.Parse(product.Amount) - item.SoLuong).ToString();
+                        code.Save();
+                        InforOrder inf = new InforOrder();
+                        inf.IDP = pay.IDP;
+                        inf.IDSP = item.SanPhamID;
+                        inf.Amount = item.SoLuong.ToString();
+                        inf.price = item.DonGia.ToString();
+                        inf.IntoMoney = item.ThanhTien.ToString();
+                        code.AddObject(inf);
+                        code.Save();
+                    }
+                    Session.Remove("Cart");
+                }
+                else
+                {
+                    json.Data = new
+                    {
+                        status = "ER"
+                    };
+                }
+            }
+            return Json(json,JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult RemoveOrder(FormCollection data)
+        {
+            JsonResult js = new JsonResult();
+            var IDP = data["idp"];
+            if (String.IsNullOrEmpty(IDP))
+            {
+                Response.Redirect("/Home/Index");
+            }
+            Code code = new Code();
+            PayOrder pay = code.GetPayOrderOne(IDP);
+            if (Session["User"] != null)
+            {
+                User u = (User)Session["User"];
+                js.Data = new
+                {
+                    status = "OK"
+                };
+                if (u.ID == pay.UID)
+                {
+                    List<InforOrder> inf = code.GetInforOrders(IDP);
+                    code.DeleteList(inf);
+                    code.Save();
+                    code.DeleteObject(pay);
+                    code.Save();
+                    js.Data = new
+                    {
+                        status = "OK"
+                    };
+                }
+                else
+                {
+                    js.Data = new
+                    {
+                        status = "ER"
+                    };
+                }
+            }
+            else
+            {
+                js.Data = new
+                {
+                    status = "ER"
+                };
+            }
+            return Json(js, JsonRequestBehavior.AllowGet);
         }
     }
 }

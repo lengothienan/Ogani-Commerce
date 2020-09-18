@@ -109,13 +109,50 @@
 @section animation{
     <script>
         $("#pay").click(function () {
+            var fistname = $("#fistname").val();
+            var lastname = $("#lastname").val();
+            var street = $("#street").val();
+            var quan = $("#quan").val();
+            var city = $("#city").val();
+            var phone = $("#phone").val();
+            var note = $("#note").val();
+            var country = $("#country").val();
             var method = $("#method").val();
-            if (method == "card") {
-                $("#img_pay").html("<img src='/Content/img/QR/10.jpg'/>");
-            } else if (method == "direct") {
-                alert("Cảm ơn");
+            if (fistname == "" || lastname == "" || street == "" || quan == "" || city == "" || phone == "" || country=="") {
+                alert("Vui lòng điền thông tin");
             } else {
-                alert("Không có phương thức thanh toán này");
+                if (method == "card") {
+                    $("#img_pay").html("<img src='/Content/img/QR/10.jpg'/>");
+                } else if (method == "direct") {
+                    var form = new FormData();
+                    form.append("fistname", fistname);
+                    form.append("lastname", lastname);
+                    form.append("street", street);
+                    form.append("quan", quan);
+                    form.append("city", city);
+                    form.append("phone", phone);
+                    form.append("note", note);
+                    form.append("country", country);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/Home/Order", true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.status == 200 && xhr.readyState == 4) {
+                            var js = JSON.parse(xhr.responseText);
+                            if (js.Data.status == "OK") {
+                                alert("Đặt hàng thành công!!!");
+                                location.reload();
+                            } else if (js.Data.status == "Full") {
+                                alert("Trong giỏ hàng có sự thay đổi!!!");
+                                location.reload();
+                            } else {
+                                alert("Đặt hàng thật bại!!!");
+                            }
+                        }
+                    }
+                    xhr.send(form);
+                } else {
+                    alert("Không có phương thức thanh toán này");
+                }
             }
         });
         var body = $("html, body");
