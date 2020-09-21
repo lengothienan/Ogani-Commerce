@@ -15,6 +15,7 @@ namespace Library
             Comments = new HashSet<Comment>();
             LoveProducts = new HashSet<LoveProduct>();
             PayOrders = new HashSet<PayOrder>();
+            Reports = new HashSet<Report>();
         }
 
         [StringLength(195)]
@@ -43,5 +44,8 @@ namespace Library
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PayOrder> PayOrders { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

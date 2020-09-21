@@ -41,23 +41,42 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="checkout__input">
-                            <p>Country<span>*</span></p>
-                            <input type="text" id="country">
-                        </div>
-                        <div class="checkout__input">
-                            <p>Address<span>*</span></p>
-                            <input type="text" id="street" placeholder="Street Address" class="checkout__input__add">
-                            <input type="text" id="quan" placeholder="Apartment, suite, unite ect (optinal)">
-                        </div>
-                        <div class="checkout__input">
-                            <p>Town/City<span>*</span></p>
-                            <input type="text" id="city">
-                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">
                                 <div class="checkout__input">
-                                    <p>Phone<span>*</span></p>
-                                    <input type="number" id="phone">
+                                    <p>Address<span>*</span></p>
+                                    <input type="text" id="street" placeholder="Street Address" class="checkout__input__add">
                                 </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="checkout__input">
+                                    <p>District<span>*</span></p>
+                                    <select id="quan" onchange="quan()" class="checkout__input__add">
+                                        @{
+                                            ActionDB.Code code = new ActionDB.Code();
+                                            List<Library.AddressOrder> address = code.GetAddressOrders();
+                                            foreach (Library.AddressOrder item in address)
+                                            {
+                                                <option value="@item.ID">@item.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="checkout__input">
+                                    <p>City<span>*</span></p>
+                                    <select id="city" class="checkout__input__add">
+                                        <option value="TP HCM">Thành phố Hồ Chí Minh</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="checkout__input">
+                            <p>Phone<span>*</span></p>
+                            <input type="number" id="phone">
+                        </div>
                         <div class="checkout__input">
                             <p>Order notes<span>*</span></p>
                             <input type="text"
@@ -78,17 +97,9 @@
                             </ul>
                             <div class="checkout__order__subtotal">Subtotal <span>@Model.Sum(m => m.ThanhTien).ToString("#,##0").Replace(",", ".") VNĐ</span></div>
                             @{
-                                if (Model.Sum(m => m.ThanhTien) > 200000)
-                                {
-                                    <div class="checkout__order__total">Fee Ship <span>Free Ship</span></div>
-                                    <div class="checkout__order__total">Total <span>@((Model.Sum(m => m.ThanhTien)).ToString("#,##0").Replace(",", ".")) VNĐ</span></div>
-                                }
-                                else
-                                {
-                                    <div class="checkout__order__total">Fee Ship <span>20.000 VNĐ</span></div>
-
-                                    <div class="checkout__order__total">Total <span>@((Model.Sum(m => m.ThanhTien)+20000).ToString("#,##0").Replace(",", ".")) VNĐ</span></div>
-                                }
+                                    <div class="checkout__order__total">Fee Ship <span id="fee"></span></div>
+                                    <div class="checkout__order__total">Total <span id="total">@((Model.Sum(m => m.ThanhTien)).ToString("#,##0").Replace(",", ".")) VNĐ</span></div>
+                                
                             }
                             <div class="checkout__order__total">Payment methods
                                 <span>
@@ -108,6 +119,21 @@
 </section>
 @section animation{
     <script>
+        function quan() {
+            var quan = $("#quan").val();
+            var form = new FormData();
+            form.append("quan", quan);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Home/Fee", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.status == 200 && xhr.readyState == 4) {
+                    var js = JSON.parse(xhr.responseText);
+                    $("#fee").html(js.Data.fee);
+                    $("#total").html(js.Data.total);
+                }
+            }
+            xhr.send(form);
+        }
         $("#pay").click(function () {
             var fistname = $("#fistname").val();
             var lastname = $("#lastname").val();
@@ -116,9 +142,8 @@
             var city = $("#city").val();
             var phone = $("#phone").val();
             var note = $("#note").val();
-            var country = $("#country").val();
             var method = $("#method").val();
-            if (fistname == "" || lastname == "" || street == "" || quan == "" || city == "" || phone == "" || country=="") {
+            if (fistname == "" || lastname == "" || street == "" || quan == "" || city == "" || phone == "" ) {
                 alert("Vui lòng điền thông tin");
             } else {
                 if (method == "card") {
@@ -132,7 +157,6 @@
                     form.append("city", city);
                     form.append("phone", phone);
                     form.append("note", note);
-                    form.append("country", country);
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "/Home/Order", true);
                     xhr.onreadystatechange = function () {

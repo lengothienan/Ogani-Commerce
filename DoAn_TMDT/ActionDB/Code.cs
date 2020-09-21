@@ -127,5 +127,21 @@ namespace ActionDB
             client.Port = !string.IsNullOrEmpty(SMTPPort) ? Convert.ToInt32(SMTPPort) : 0;
             client.Send(mail);
         }
+        public List<AddressOrder> GetAddressOrders()
+        {
+            return db.AddressOrders.ToList();
+        }
+        public FeeShip GetFeeShip(string ID)
+        {
+            return db.FeeShips.Where(m => m.ID == ID).FirstOrDefault();
+        }
+        public List<Event> GetEvents()
+        {
+            return db.Events.ToList();
+        }
+        public List<ProductOfEvent> GetProductOfEvents(string id)
+        {
+            return db.ProductOfEvents.Where(m => m.IDE == id).ToList();
+        }
     }
 }

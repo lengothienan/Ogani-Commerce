@@ -1,0 +1,415 @@
+﻿
+@{
+    ViewBag.Title = "Event";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="breadcrumb-section set-bg" data-setbg="/Content/img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Organi Shop</h2>
+                    <div class="breadcrumb__option">
+                        <a href="./index.html">Home</a>
+                        <span>Shop</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                <div class="sidebar">
+                    <div class="sidebar__item">
+                        <h4>Department</h4>
+                        <ul>
+                            @{
+                                ActionDB.Code code = new ActionDB.Code();
+                                List<Library.Product> sp = code.GetProducts();
+                                List<Library.ProductType> lsp = code.productTypes();
+                                foreach (Library.ProductType item in lsp)
+                                {
+                                    <li><a href="/Home/Product/@item.IDLSP">@item.Name</a></li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="sidebar__item">
+                        <h4>Price</h4>
+                        <div class="price-range-wrap">
+                            <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                 data-min="10" data-max="500">
+                                <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" id="handle"></span>
+                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" id="handle"></span>
+                            </div>
+                            <div class="range-slider">
+                                <div class="price-input">
+                                    <input type="text" id="minamount">
+                                    <input type="text" id="maxamount">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar__item">
+                        <div class="latest-product__text">
+                            <h4>Latest Products</h4>
+                            <div class="latest-product__slider owl-carousel">
+                                <div class="latest-prdouct__slider__item">
+                                    @{ int dem = 0;
+                                        foreach (Library.Product item in sp)
+                                        {
+                                            Library.Sale sale = code.GetSale(item.IDKM);
+                                            if (dem < 3)
+                                            {
+                                                <a href="/Home/DetailProduct/@item.IDSP" class="latest-product__item">
+                                                    <div class="latest-product__item__pic" style="width: 50%">
+                                                        <img src="~/Content/img/product/@item.Image" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@item.Name</h6>
+                                                        <span>@((int.Parse(item.Cost) - int.Parse(item.Cost) * int.Parse(sale.phantram) * 0.01).ToString("#,##0").Replace(",", ".")) VNĐ</span>
+                                                    </div>
+                                                </a>
+                                            }
+                                            dem++;
+                                        }
+                                    }
+                                </div>
+                                <div class="latest-prdouct__slider__item">
+                                    @{ dem = 0;
+                                        foreach (Library.Product item in sp)
+                                        {
+                                            Library.Sale sale = code.GetSale(item.IDKM);
+                                            if (dem >= 3 && dem < 6)
+                                            {
+                                                <a href="/Home/Pruduct/@item.IDSP" class="latest-product__item">
+                                                    <div class="latest-product__item__pic" style="width: 50%">
+                                                        <img src="~/Content/img/product/@item.Image" alt="">
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>@item.Name</h6>
+                                                        <span>@((int.Parse(item.Cost) - int.Parse(item.Cost) * int.Parse(sale.phantram) * 0.01).ToString("#,##0").Replace(",", ".")) VNĐ</span>
+                                                    </div>
+                                                </a>
+                                            }
+                                            dem++;
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-7">
+                <div class="product__discount">
+                    <div class="section-title product__discount__title">
+                        <h2>Sale Off</h2>
+                    </div>
+                    <div class="row">
+                        <div class="product__discount__slider owl-carousel">
+                            @{
+                                foreach (Library.Product item in sp)
+                                {
+                                    Library.Sale sale = code.GetSale(item.IDKM);
+                                    if (int.Parse(sale.phantram) > 0)
+                                    {
+                                        <div class="col-lg-4">
+                                            <div class="product__discount__item">
+                                                <div class="product__discount__item__pic set-bg"
+                                                     data-setbg="/Content/img/product/@item.Image">
+                                                    <div class="product__discount__percent">-@int.Parse(sale.phantram)%</div>
+                                                    <ul class="product__item__pic__hover">
+                                                        @{
+                                                            if (Session["User"] == null)
+                                                            {
+                                                                <li><a href="/Home/Login"><i class="fa fa-heart"></i></a></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                Library.User u = (Library.User)Session["User"];
+                                                                Library.LoveProduct lo = code.GetLoveProduct(u.ID, item.IDSP);
+                                                                if (lo == null)
+                                                                {
+                                                                    <li><a href="javascript: love('@item.IDSP')"><i class="fa fa-heart"></i></a></li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li><a href="javascript: love('@item.IDSP')"><i class="fa fa-heart" style="color: red"></i></a></li>
+                                                                }
+                                                            }
+                                                        }
+                                                        <li><a href="javascript: addcart('@item.IDSP')"><i class="fa fa-shopping-cart"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="product__discount__item__text">
+                                                    <h5><a href="/Home/DetailProduct/@item.IDSP">@item.Name</a></h5>
+                                                    <div class="product__item__price">@((int.Parse(item.Cost) - int.Parse(item.Cost) * int.Parse(sale.phantram) * 0.01).ToString("#,##0").Replace(",", ".")) VNĐ<span>@int.Parse(item.Cost).ToString("#,##0").Replace(",", ".") VNĐ</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                @model List<Library.ProductOfEvent>
+                <div class="filter__item">
+                    <div class="section-title product__discount__title">
+                        <h2>Search</h2>
+                    </div>
+                    <div class="row">
+                        <div style="display: flex">
+                            <input type="text" id="textsearch" name="textsearch" style="font-size: 27px" placeholder="What do you need?">
+                            <!--<button type="submit" id="submit-search" class="site-btn">SEARCH</button>-->
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <div class="filter__found" id="foundsearch">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="productsearch">
+
+                </div>
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" role="tablist" id="trangsearch">
+                    </ul>
+                </div>
+                <div class="filter__item">
+                    <div class="section-title product__discount__title">
+                        <h2>Products: Event</h2>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <div class="filter__found">
+                                <h6>
+                                    @{
+                                        if (Model.Count() > 0)
+                                        {<span>@Model.Count()</span>}
+                                    else
+                                    {
+                                        <span>
+                                            @sp.Count()
+                                        </span>
+                                    }
+                                    }                                                                Products found
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="product">
+                    @{
+                        if (Model.Count() == 0)
+                        {
+                            for (int i = 1; i <= Math.Ceiling((double)(sp.Count()) / 9); i++)
+                            {
+                                int demsl = 0;
+                                int soluongsp = i * 9 - 9;
+                                int soluonghientai = i * 9;
+                                string active = "active";
+                                if (i != 1)
+                                {
+                                    active = "";
+                                }
+                                <div class="row tab-pane @active" id="tabs-@i" role="tabpanel">
+                                    @foreach (Library.Product item in sp)
+                                    {
+                                        if (demsl >= soluongsp && demsl < soluonghientai)
+                                        {
+                                            Library.Sale sale = code.GetSale(item.IDKM);
+                                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                                <div class="product__item">
+                                                    <div class="product__item__pic set-bg" data-setbg="/Content/img/product/@item.Image">
+                                                        <ul class="product__item__pic__hover">
+                                                            @{
+                                                                if (Session["User"] == null)
+                                                                {
+                                                                    <li><a href="/Home/Login"><i class="fa fa-heart"></i></a></li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    Library.User u = (Library.User)Session["User"];
+                                                                    Library.LoveProduct lo = code.GetLoveProduct(u.ID, item.IDSP);
+                                                                    if (lo == null)
+                                                                    {
+                                                                        <li><a href="javascript: love('@item.IDSP')"><i class="fa fa-heart"></i></a></li>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <li><a href="javascript: love('@item.IDSP')"><i class="fa fa-heart" style="color: red"></i></a></li>
+                                                                    }
+                                                                }
+                                                            }
+                                                            <li><a href="javascript: addcart('@item.IDSP')"><i class="fa fa-shopping-cart"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="product__item__text">
+                                                        <h6><a href="/Home/DetailProduct/@item.IDSP">@item.Name</a></h6>
+                                                        <h5>@((int.Parse(item.Cost) - int.Parse(item.Cost) * int.Parse(sale.phantram) * 0.01).ToString("#,##0").Replace(",", ".")) VNĐ</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        demsl++;
+                                    }
+                                    <p align="center" class="col-lg-12 col-sm-12 col-md-12">Trang hiện tại: @i</p>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 1; i <= Math.Ceiling((double)(Model.Count()) / 9); i++)
+                            {
+                                int demsl = 0;
+                                int soluongsp = i * 9 - 9;
+                                int soluonghientai = i * 9;
+                                string active = "active";
+                                if (i != 1)
+                                {
+                                    active = "";
+                                }
+                                <div class="row tab-pane @active" id="tabs-@i" role="tabpanel">
+                                    @foreach (Library.ProductOfEvent pot in Model)
+                                    {
+                                        if (demsl >= soluongsp && demsl < soluonghientai)
+                                        {
+                                            Library.Product pd = code.GetProduct(pot.IDSP);
+                                            Library.Sale sale = code.GetSale(pd.IDKM);
+                                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                                <div class="product__item">
+                                                    <div class="product__item__pic set-bg" data-setbg="/Content/img/product/@pd.Image">
+                                                        <ul class="product__item__pic__hover">
+                                                            @{
+                                                                if (Session["User"] == null)
+                                                                {
+                                                                    <li><a href="/Home/Login"><i class="fa fa-heart"></i></a></li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    Library.User u = (Library.User)Session["User"];
+                                                                    Library.LoveProduct lo = code.GetLoveProduct(u.ID, pot.IDSP);
+                                                                    if (lo == null)
+                                                                    {
+                                                                        <li><a href="javascript: love('@pot.IDSP')"><i class="fa fa-heart"></i></a></li>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <li><a href="javascript: love('@pot.IDSP')"><i class="fa fa-heart" style="color: red"></i></a></li>
+                                                                    }
+                                                                }
+                                                            }
+                                                            <li><a href="javascript: addcart('@pd.IDSP')"><i class="fa fa-shopping-cart"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="product__item__text">
+                                                        <h6><a href="/Home/DetailProduct/@pd.IDSP">@pd.Name</a></h6>
+                                                        <h5>@((int.Parse(pd.Cost) - int.Parse(pd.Cost) * int.Parse(sale.phantram) * 0.01).ToString("#,##0").Replace(",", ".")) VNĐ</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <p align="center" class="col-lg-12 col-sm-12 col-md-12">Trang hiện tại: @i</p>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                <div class="col-lg-12">
+
+                    <ul class="nav nav-tabs" role="tablist">
+                        @{
+                            if (Model.Count() == 0)
+                            {
+                                for (int i = 1; i <= Math.Ceiling((double)sp.Count() / 9); i++)
+                                {
+                                    if (i != 1)
+                                    {
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#tabs-@i" role="tab"
+                                               aria-selected="true">@i</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item active">
+                                            <a class="nav-link active" data-toggle="tab" href="#tabs-@i" role="tab"
+                                               aria-selected="true">@i</a>
+                                        </li>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i <= Math.Ceiling((double)Model.Count() / 9); i++)
+                                {
+                                    if (i != 1)
+                                    {
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#tabs-@i" role="tab"
+                                               aria-selected="true">@i</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item active">
+                                            <a class="nav-link active" data-toggle="tab" href="#tabs-@i" role="tab"
+                                               aria-selected="true">@i</a>
+                                        </li>
+                                    }
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="test"></section>
+@section search{
+    <script>
+        function addcart(id) {
+            var form = new FormData();
+            var idsp = id;
+            var soluongmua = 1;
+            form.append("idsp", idsp);
+            form.append("soluong", soluongmua);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Home/AddCart", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.status == 200 && xhr.readyState == 4) {
+                    var json = JSON.parse(xhr.responseText);
+                    if (json.Data.status == "OK") {
+                        window.location = "/Home/Cart";
+                    } else if (json.Data.status == "ERAm") {
+                        alert("Sản phẩm chỉ còn: " + json.Data.soluongmua);
+                    }
+                    else {
+                        alert("Add Fail");
+                    }
+                }
+            }
+            xhr.send(form);
+        }
+        var body = $("html, body");
+        body.animate({ scrollTop: 738 });
+    </script>
+
+}

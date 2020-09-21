@@ -10,7 +10,6 @@ using System.Web.UI;
 using Microsoft.Ajax.Utilities;
 using System.Text.RegularExpressions;
 using DoAn_TMDT.Models;
-
 namespace DoAn_TMDT.Controllers
 {
     public class HomeController : Controller
@@ -941,30 +940,31 @@ namespace DoAn_TMDT.Controllers
                     string city = data["city"];
                     string phone = data["phone"];
                     string note = data["note"];
-                    string country = data["country"];
                     User u = (User)Session["User"];
                     PayOrder pay = new PayOrder();
                     string content = "Bạn vừa mới đặt hàng: ";
                     pay.IDP = Guid.NewGuid().ToString();
                     pay.UID = u.ID;
-                    pay.Address = street + " " + quan + " " + city + " " + country;
+                    pay.Address = street + " " + quan + " " + city;
                     pay.Phone = phone;
                     pay.Note = note;
                     pay.Receiver = fistname + " " +lastname ;
-                    pay.Status = "Đang xử lý";
+                    pay.Status = "Đã đặt";
                     pay.StatusPay = "Chưa thanh toán";
+                    AddressOrder add = code.GetAddressOrders().Where(m => m.ID == data["quan"]).FirstOrDefault();
+                    FeeShip fee = code.GetFeeShip(add.FeeShip);
                     if (giohang.Sum(m => m.ThanhTien) >= 200000) {
                         pay.Total = giohang.Sum(m => m.ThanhTien).ToString();
                     }
                     else
                     {
-                        pay.Total = (giohang.Sum(m => m.ThanhTien)+20000).ToString();
+                        pay.Total = (giohang.Sum(m => m.ThanhTien)+int.Parse(fee.FeeShip1)).ToString();
                     }
                     pay.DateOrder = DateTime.Now.ToString();
                     code.AddObject(pay);
                     code.Save();
                     content +="Người nhận: " +pay.Receiver + ". Địa chỉ: " + pay.Address + ". SĐT: " + pay.Phone + ".Ghi chú: " + pay.Note + ".Tổng tiền: " + int.Parse(pay.Total).ToString("#,##0").Replace(",",".") + "VNĐ. Thời gian đặt: " + pay.DateOrder+ ". Cảm ơn đã đặt hàng của chúng tôi.";
-                    code.sendmail("tuanhung23042001@gmail.com", "Hóa đơn",content);
+                    code.sendmail(u.Email,"Đơn hàng",content);
                     json.Data = new
                     {
                         status = "OK"
@@ -1014,15 +1014,22 @@ namespace DoAn_TMDT.Controllers
                 };
                 if (u.ID == pay.UID)
                 {
-                    List<InforOrder> inf = code.GetInforOrders(IDP);
-                    code.DeleteList(inf);
-                    code.Save();
-                    code.DeleteObject(pay);
-                    code.Save();
-                    js.Data = new
+                    if(pay.Status=="Đang xử lý" || pay.Status=="Đang giao")
                     {
-                        status = "OK"
-                    };
+                        pay.Status = "Hủy";
+                        code.Save();
+                        js.Data = new
+                        {
+                            status = "OK"
+                        };
+                    }
+                    else
+                    {
+                        js.Data = new
+                        {
+                            status = "ER"
+                        };
+                    }
                 }
                 else
                 {
@@ -1040,6 +1047,41 @@ namespace DoAn_TMDT.Controllers
                 };
             }
             return Json(js, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult Fee(FormCollection data)
+        {
+            if (data == null)
+            {
+                Response.Redirect("/Home/Index");
+            }
+            JsonResult js = new JsonResult();
+            Code code = new Code();
+            AddressOrder add = code.GetAddressOrders().Where(m => m.ID == data["quan"]).FirstOrDefault();
+            FeeShip fee = code.GetFeeShip(add.FeeShip);
+            List<CartItem> giohang = Session["Cart"] as List<CartItem>;
+            if (giohang.Sum(m => m.ThanhTien) >= 200000)
+            {
+                js.Data = new
+                {
+                    fee = "Free Ship",
+                    total = giohang.Sum(m => m.ThanhTien).ToString("#,##0").Replace(",", ".") + " VNĐ",
+                };
+            }
+            else
+            {
+                js.Data = new
+                {
+                    fee = int.Parse(fee.FeeShip1).ToString("#,##0").Replace(",", ".") + " VNĐ",
+                    total = (giohang.Sum(m => m.ThanhTien) + int.Parse(fee.FeeShip1)).ToString("#,##0").Replace(",", ".") + " VNĐ",
+                };
+            }
+            return Json(js, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Event(string id)
+        {
+            Code code = new Code();
+            List<ProductOfEvent> pot = code.GetProductOfEvents(id);
+            return View(pot);
         }
     }
 }

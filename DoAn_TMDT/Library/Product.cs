@@ -15,6 +15,7 @@ namespace Library
             Comments = new HashSet<Comment>();
             InforOrders = new HashSet<InforOrder>();
             LoveProducts = new HashSet<LoveProduct>();
+            ProductOfEvents = new HashSet<ProductOfEvent>();
             ProductOfTypes = new HashSet<ProductOfType>();
         }
 
@@ -53,6 +54,9 @@ namespace Library
         public virtual ICollection<LoveProduct> LoveProducts { get; set; }
 
         public virtual Sale Sale { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductOfEvent> ProductOfEvents { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductOfType> ProductOfTypes { get; set; }

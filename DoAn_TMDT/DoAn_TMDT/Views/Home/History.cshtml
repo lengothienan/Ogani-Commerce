@@ -26,75 +26,377 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                @{
-                    if (Model == null || Model.Count() == 0)
-                    {
-                        <h4 align="center">Your Order is empty</h4>
-                    }
-                    else
-                    {
-                        <div class="shoping__cart__table">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="shoping__product">ID</th>
-                                        <th>Reciever</th>
-                                        <th>Address</th>
-                                        <th>Phone</th>
-                                        <th>Date Order</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
-                                        <th>StatusPay</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @{
-                                        int dem = 0;
-                                        foreach (Library.PayOrder item in Model)
-                                        {
-                                            dem++;
-                                            <tr id="donhang_@item.IDP">
-                                                <th class="shoping__cart__quantity">
-                                                    <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
-                                                </th>
-                                                <th class="shoping__cart__item">
-                                                    @item.Receiver
-                                                </th>
-                                                <th class="shoping__cart__item">
-                                                    @item.Address
-                                                </th>
-                                                <th class="shoping__cart__item">
-                                                    @item.Phone
-                                                </th>
-                                                <th class="shoping__cart__item">
-                                                    @item.DateOrder
-                                                </th>
-                                                <th class="shoping__cart__item">
-                                                    @int.Parse(item.Total).ToString("#,##0").Replace(",", ".") VNĐ
-                                                </th>
-                                                <th class="shoping__cart__item">
-                                                    @item.Status
-                                                </th>
-                                                <th class="shoping__cart__item">
-                                                    @item.StatusPay
-                                                </th>
-                                                @if (item.Status != "Đã giao")
-                                                {
-                                                    <th><a class="btn-danger btn" href="javascript: Canceldh('@item.IDP')">Hủy</a></th>
-                                                }
-                                                else
-                                                {
-                                                    <th></th>
-                                                }
-                                            </tr>
-                                        }
+                <div class="product__details__tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
+                               aria-selected="true">Đã đặt</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
+                               aria-selected="false">Đang xử lý</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab"
+                               aria-selected="false">Đang giao</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab"
+                               aria-selected="false">Đã nhận hàng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-5" role="tab"
+                               aria-selected="false">Đã hủy</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="product__details__tab__desc">
+                                <h3 align="center"><strong>Đã đặt</strong></h3>
+                                @{
+                                    if (Model == null || Model.Count() == 0)
+                                    {
+                                        <h4 align="center">Your Order is empty</h4>
                                     }
-                                </tbody>
-                            </table>
+                                    else
+                                    {
+                                        <div class="shoping__cart__table">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="shoping__product">ID</th>
+                                                        <th>Reciever</th>
+                                                        <th>Address</th>
+                                                        <th>Phone</th>
+                                                        <th>Date Order</th>
+                                                        <th>Total</th>
+                                                        <th>Status</th>
+                                                        <th>StatusPay</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int dem = 0;
+                                                        foreach (Library.PayOrder item in Model.Where(m=>m.Status=="Đã đặt").ToList())
+                                                        {
+                                                            dem++;
+                                                            <tr id="donhang_@item.IDP">
+                                                                <th class="shoping__cart__quantity">
+                                                                    <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Receiver
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Address
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Phone
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.DateOrder
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @int.Parse(item.Total).ToString("#,##0").Replace(",", ".") VNĐ
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Status
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.StatusPay
+                                                                </th>
+                                                                @if (item.Status != "Đã nhận hàng" || item.Status != "Đang giao" || item.Status != "Hủy")
+                                                                {
+                                                                    <th><a class="btn-danger btn" href="javascript: Canceldh('@item.IDP')">Hủy</a></th>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <th></th>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
                         </div>
-                    }
-                }
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="product__details__tab__desc">
+                                <h3 align="center"><strong>Đã xử lý</strong></h3>
+                                @{
+                                    if (Model == null || Model.Count() == 0)
+                                    {
+                                        <h4 align="center">Your Order is empty</h4>
+                                    }
+                                    else
+                                    {
+                                        <div class="shoping__cart__table">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="shoping__product">ID</th>
+                                                        <th>Reciever</th>
+                                                        <th>Address</th>
+                                                        <th>Phone</th>
+                                                        <th>Date Order</th>
+                                                        <th>Total</th>
+                                                        <th>Status</th>
+                                                        <th>StatusPay</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int dem = 0;
+                                                        foreach (Library.PayOrder item in Model.Where(m => m.Status == "Đang xử lý").ToList())
+                                                        {
+                                                            dem++;
+                                                            <tr id="donhang1_@item.IDP">
+                                                                <th class="shoping__cart__quantity">
+                                                                    <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Receiver
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Address
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Phone
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.DateOrder
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @int.Parse(item.Total).ToString("#,##0").Replace(",", ".") VNĐ
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Status
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.StatusPay
+                                                                </th>
+                                                                @if (item.Status != "Đã nhận hàng" || item.Status != "Đang giao" || item.Status != "Hủy")
+                                                                {
+                                                                    <th><a class="btn-danger btn" href="javascript: Canceldh1('@item.IDP')">Hủy</a></th>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <th></th>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <div class="product__details__tab__desc">
+                                <h3 align="center"><strong>Đang giao hàng</strong></h3>
+                                @{
+                                    if (Model == null || Model.Count() == 0)
+                                    {
+                                        <h4 align="center">Your Order is empty</h4>
+                                    }
+                                    else
+                                    {
+                                        <div class="shoping__cart__table">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="shoping__product">ID</th>
+                                                        <th>Reciever</th>
+                                                        <th>Address</th>
+                                                        <th>Phone</th>
+                                                        <th>Date Order</th>
+                                                        <th>Total</th>
+                                                        <th>Status</th>
+                                                        <th>StatusPay</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int dem = 0;
+                                                        foreach (Library.PayOrder item in Model.Where(m => m.Status == "Đang giao").ToList())
+                                                        {
+                                                            dem++;
+                                                            <tr>
+                                                                <th class="shoping__cart__quantity">
+                                                                    <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Receiver
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Address
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Phone
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.DateOrder
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @int.Parse(item.Total).ToString("#,##0").Replace(",", ".") VNĐ
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Status
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.StatusPay
+                                                                </th>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-4" role="tabpanel">
+                            <div class="product__details__tab__desc">
+                                <h3 align="center"><strong>Đã nhận hàng</strong></h3>
+                                @{
+                                    if (Model == null || Model.Count() == 0)
+                                    {
+                                        <h4 align="center">Your Order is empty</h4>
+                                    }
+                                    else
+                                    {
+                                        <div class="shoping__cart__table">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="shoping__product">ID</th>
+                                                        <th>Reciever</th>
+                                                        <th>Address</th>
+                                                        <th>Phone</th>
+                                                        <th>Date Order</th>
+                                                        <th>Total</th>
+                                                        <th>Status</th>
+                                                        <th>StatusPay</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int dem = 0;
+                                                        foreach (Library.PayOrder item in Model.Where(m => m.Status == "Đã nhận hàng").ToList())
+                                                        {
+                                                            dem++;
+                                                            <tr>
+                                                                <th class="shoping__cart__quantity">
+                                                                    <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Receiver
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Address
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Phone
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.DateOrder
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @int.Parse(item.Total).ToString("#,##0").Replace(",", ".") VNĐ
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Status
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.StatusPay
+                                                                </th>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-5" role="tabpanel">
+                            <div class="product__details__tab__desc">
+                                <h3 align="center"><strong>Đơn đã hủy</strong></h3>
+                                @{
+                                    if (Model == null || Model.Count() == 0)
+                                    {
+                                        <h4 align="center">Your Order is empty</h4>
+                                    }
+                                    else
+                                    {
+                                        <div class="shoping__cart__table">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="shoping__product">ID</th>
+                                                        <th>Reciever</th>
+                                                        <th>Address</th>
+                                                        <th>Phone</th>
+                                                        <th>Date Order</th>
+                                                        <th>Total</th>
+                                                        <th>Status</th>
+                                                        <th>StatusPay</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int dem = 0;
+                                                        foreach (Library.PayOrder item in Model.Where(m => m.Status == "Hủy").ToList())
+                                                        {
+                                                            dem++;
+                                                            <tr id="donhang_@item.IDP">
+                                                                <th class="shoping__cart__quantity">
+                                                                    <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Receiver
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Address
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Phone
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.DateOrder
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @int.Parse(item.Total).ToString("#,##0").Replace(",", ".") VNĐ
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.Status
+                                                                </th>
+                                                                <th class="shoping__cart__item">
+                                                                    @item.StatusPay
+                                                                </th>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -112,6 +414,27 @@
                         var json = JSON.parse(xhr.responseText);
                         if (json.Data.status == "OK") {
                             $("#donhang_" + id).remove();
+                            alert("Delete Success");
+                        }
+                        else {
+                            alert("Delete Fail");
+                        }
+                    }
+                }
+                xhr.send(form);
+            }
+        }
+        function Canceldh1(id) {
+            if (confirm("Bạn có muốn hủy đơn hàng?")) {
+                var form = new FormData();
+                form.append("idp", id);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/Home/RemoveOrder", true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        var json = JSON.parse(xhr.responseText);
+                        if (json.Data.status == "OK") {
+                            $("#donhang1_" + id).remove();
                             alert("Delete Success");
                         }
                         else {

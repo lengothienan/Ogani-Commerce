@@ -291,6 +291,23 @@
                     </div>
                 </div>
                 <div class="col-lg-9">
+                    <div class="hero__categories col-lg-4">
+                        <div class="hero__categories__all">
+                            <i class="fa fa-bars"></i>
+                            <span>All departments</span>
+                        </div>
+                        <ul>
+
+                            @{
+                                List<Library.Event> ev = code.GetEvents();
+                                foreach (Library.Event item in ev)
+                                {
+                                    <li><a href="/Home/Event/@item.ID">@item.Name</a></li>
+                                }
+                            }
+
+                        </ul>
+                    </div>
                     <div class="hero__search">
                         <div class="hero__search__phone">
                             <div class="hero__search__phone__icon">
