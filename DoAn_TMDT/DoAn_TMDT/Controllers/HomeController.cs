@@ -1018,6 +1018,73 @@ namespace DoAn_TMDT.Controllers
                     {
                         pay.Status = "Hủy";
                         code.Save();
+                        Report rp = new Report();
+                        rp.IDP = pay.IDP;
+                        rp.UID = u.ID;
+                        rp.Status = "Chưa đọc";
+                        rp.ID = Guid.NewGuid().ToString();
+                        rp.Mess = data["lydo"];
+                        code.AddObject(rp);
+                        code.Save();
+                        js.Data = new
+                        {
+                            status = "OK"
+                        };
+                    }
+                    else
+                    {
+                        js.Data = new
+                        {
+                            status = "ER"
+                        };
+                    }
+                }
+                else
+                {
+                    js.Data = new
+                    {
+                        status = "ER"
+                    };
+                }
+            }
+            else
+            {
+                js.Data = new
+                {
+                    status = "ER"
+                };
+            }
+            return Json(js, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ReportOrder(FormCollection data)
+        {
+            JsonResult js = new JsonResult();
+            var IDP = data["idp"];
+            if (String.IsNullOrEmpty(IDP))
+            {
+                Response.Redirect("/Home/Index");
+            }
+            Code code = new Code();
+            PayOrder pay = code.GetPayOrderOne(IDP);
+            if (Session["User"] != null)
+            {
+                User u = (User)Session["User"];
+                js.Data = new
+                {
+                    status = "OK"
+                };
+                if (u.ID == pay.UID)
+                {
+                    if (pay.Status == "Đã nhận hàng")
+                    {
+                        Report rp = new Report();
+                        rp.IDP = pay.IDP;
+                        rp.UID = u.ID;
+                        rp.Status = "Chưa đọc";
+                        rp.ID = Guid.NewGuid().ToString();
+                        rp.Mess = data["lydo"];
+                        code.AddObject(rp);
+                        code.Save();
                         js.Data = new
                         {
                             status = "OK"

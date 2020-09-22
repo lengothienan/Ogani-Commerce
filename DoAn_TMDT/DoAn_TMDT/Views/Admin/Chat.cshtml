@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewBag.Title = "Chat";
+    Layout = "~/Views/Shared/Admin.cshtml";
+}
+<div style="display: flex;height: 76vh;">
+    <div id="User" style="height: 76vh;width: 20%;overflow-x: hidden">
+        @{
+            ActionDB.Code code = new ActionDB.Code();
+            foreach (Library.User item in code.GetUsers())
+            {
+                <a class="btn primary-btn btn-block btn-primary" href="/Admin/Chat/@item.ID">@item.UID</a>
+            }
+        }
+    </div>
+    <div id="Khungchat" style="height: 76vh;width: 80%">
+        <div id="messages" style="height: 72vh;overflow-x: hidden;width: 100%" class="primary-btn"></div>
+        <div id="noichat" style="height: 4vh;width: 100%;display: flex;">
+            <input type="text" id="message" style="flex: auto">
+            <a class="btn btn-dark" id="gui">Gửi</a>
+        </div>
+    </div>
+</div>
+<style>
+    .msg {
+        color: black;
+        background-color: rgb(180, 214, 111);
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-bottom: 8px;
+        width: fit-content;
+        font-weight: 100;
+    }
+
+        .msg p {
+            padding: 0 5px;
+            border-radius: 3px;
+            margin: 0;
+            width: fit-content;
+            color: black;
+        }
+
+        .msg span {
+            font-size: 0.7rem;
+            margin-left: 15px;
+        }
+</style>
+@section mess{
+    <script>
+        window.setTimeout("Mess(1)", 0);
+        function Mess(thutu) {
+            var form = new FormData();
+            form.append("thutu", thutu);
+            form.append("User","@ViewBag.User");
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Admin/JSChat", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.status == 200 && xhr.readyState == 4) {
+                    var js = JSON.parse(xhr.responseText);
+                    if (js.Data.status == "OK") {
+                        $("#messages").append("<div class='msg'><p>" + js.Data.Name + "</p>" + js.Data.Mess + "<span>" + js.Data.Time + "</span></div>");
+                        setTimeout("Mess(" + (thutu - 1 + 2) + ")", 0);
+                    } else if (js.Data.status == "OKK") {
+                        setTimeout("Mess(" + (thutu - 1 + 2) + ")", 0);
+                    } else {
+                        setTimeout("Mess(" + thutu + ")", 0);
+                        $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });
+                    }
+                }
+            }
+            xhr.send(form);
+        }
+        $('#message').keypress(function (event) {
+            var x = event.which || event.keyCode;
+            if (x == 13) {
+                var form = new FormData();
+                var text = $('#message').val();
+                if (text != "") {
+                    form.append("text", text);
+                    form.append("User", "@ViewBag.User");
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/Admin/SendMess", true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.status == 200 && xhr.readyState == 4) {
+                            var json = JSON.parse(xhr.responseText);
+                            if (json.Data.status == "OK") {
+                                $("#message").val("");
+                                $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });
+                            }
+                            else {
+                                $("#message").val("");
+                                alert("Vui lòng đăng nhập");
+                            }
+                        }
+                    }
+                    xhr.send(form);
+                } else {
+                    alert("Vui lòng nhập thông tin");
+                }
+                $('#message').val('');
+            }
+        });
+        $("#gui").click(function () {
+            var form = new FormData();
+            var text = $('#message').val();
+            if (text != "") {
+                form.append("text", text);
+                form.append("User", "@ViewBag.User");
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/Admin/SendMess", true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        var json = JSON.parse(xhr.responseText);
+                        if (json.Data.status == "OK") {
+                            $("#message").val("");
+                            $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });
+                        }
+                        else {
+                            $("#message").val("");
+                            alert("Bạn cần đăng nhập");
+                        }
+                    }
+                }
+                xhr.send(form);
+            } else {
+                alert("Vui lòng nhập thông tin");
+            }
+            $('#message').val('');
+        });
+    </script>
+}
+

@@ -1,27 +1,174 @@
-﻿
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-<style>
-    body {
-        background-image: url('../../Content/Image/BackGround/Grey-Abstract-Wallpaper-16-1920x1080.jpg');
-    }
-</style>
+﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Admin</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
     <link href="~/Content/Image/BackGround/Color-PNG-Clipart.png" type="image/x-icon" rel="icon">
+    <link rel="stylesheet" href="~/Content/fontawesome-free-5.11.2-web/css/all.css">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/css/main.css" type="text/css">
 </head>
+
 <body>
-    <div>
-        @RenderBody()
+
+
+
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
     </div>
+
+    <!-- Humberger Begin -->
+    <div class="humberger__menu__overlay"></div>
+    <div class="humberger__menu__wrapper">
+        <div class="humberger__menu__logo">
+            <a href="/Home/Index"><img src="~/Content/img/logo.png" alt=""></a>
+        </div>
+        <div class="humberger__menu__cart">
+            <ul>
+                <li>
+
+                </li>
+                <li>
+                    <a href="/Home/Cart">
+                        <i class="fa fa-shopping-bag"></i>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="humberger__menu__widget">
+            <div class="header__top__right__auth">
+                <a href="/Admin/Logout" id="se">Logout</a>
+            </div>
+        </div>
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                <li class="active"><a href="/Home/Index">Home</a></li>
+                <li><a href="/Home/Product">Shop</a></li>
+                <li>
+                    <a href="#">Pages</a>
+                    <ul class="header__menu__dropdown">
+                        <li><a href="/Home/Love">Favorite product</a></li>
+                        <li><a href="/Home/Cart">Shoping Cart</a></li>
+                        <li><a href="/Home/CheckOut">Check Out</a></li>
+                        <li><a href="/Home/History">History</a></li>
+                    </ul>
+                </li>
+                <li><a href="/Home/Contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!-- Humberger End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__right">
+                            <div class="header__top__right__auth">
+
+                                <a href="/Admin/Logout" id="se">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a href="/Home/Index"><img src="~/Content/img/logo.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="/Home/Index">Home</a></li>
+                            <li><a href="/Home/Product">Shop</a></li>
+                            <li>
+                                <a>Pages</a>
+                                <ul class="header__menu__dropdown">
+                                    <li><a href="/Home/Love">Favorite product</a></li>
+                                    <li><a href="/Home/Cart">Shoping Cart</a></li>
+                                    <li><a href="/Home/CheckOut">Check Out</a></li>
+                                    <li><a href="/Home/History">History</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/Home/Contact">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__cart">
+                        <ul>
+                            <li>
+
+                            </li>
+                            <li>
+                                <a href="/Home/Cart">
+                                    <i class="fa fa-shopping-bag"></i>
+
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    @RenderBody();
+
+
+    <!-- Footer Section End -->
+    <!-- Js Plugins -->
+    <script src="~/Content/js/jquery-3.3.1.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/jquery.nice-select.min.js"></script>
+    <script src="~/Content/js/jquery-ui.min.js"></script>
+    <script src="~/Content/js/jquery.slicknav.js"></script>
+    <script src="~/Content/js/mixitup.min.js"></script>
+    <script src="~/Content/js/owl.carousel.min.js"></script>
+    <script src="~/Content/js/index.js"></script>
+
+
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-    @RenderSection("login", required: false)
+    @RenderSection("search", required: false)
+    @RenderSection("change", required: false)
+    @RenderSection("uploadimg", required: false)
+    @RenderSection("upload", required: false)
+    @RenderSection("addcart", required: false)
+    @RenderSection("remove", required: false)
+    
+    @RenderSection("animation", required: false)
+    @RenderSection("huydonhang", required: false)
+    @RenderSection("mess", required: false)
 </body>
 </html>

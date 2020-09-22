@@ -143,5 +143,9 @@ namespace ActionDB
         {
             return db.ProductOfEvents.Where(m => m.IDE == id).ToList();
         }
+        public List<User> GetUsers()
+        {
+            return db.Users.ToList();
+        }
     }
 }

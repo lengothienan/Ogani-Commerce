@@ -81,7 +81,7 @@
                                                         foreach (Library.PayOrder item in Model.Where(m=>m.Status=="Đã đặt").ToList())
                                                         {
                                                             dem++;
-                                                            <tr id="donhang_@item.IDP">
+                                                            <tr>
                                                                 <th class="shoping__cart__quantity">
                                                                     <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
                                                                 </th>
@@ -156,7 +156,7 @@
                                                         foreach (Library.PayOrder item in Model.Where(m => m.Status == "Đang xử lý").ToList())
                                                         {
                                                             dem++;
-                                                            <tr id="donhang1_@item.IDP">
+                                                            <tr>
                                                                 <th class="shoping__cart__quantity">
                                                                     <h5><a href="/Home/InforOrder/@item.IDP">@dem</a></h5>
                                                                 </th>
@@ -183,7 +183,7 @@
                                                                 </th>
                                                                 @if (item.Status != "Đã nhận hàng" || item.Status != "Đang giao" || item.Status != "Hủy")
                                                                 {
-                                                                    <th><a class="btn-danger btn" href="javascript: Canceldh1('@item.IDP')">Hủy</a></th>
+                                                                    <th><a class="btn-danger btn" href="javascript: Canceldh('@item.IDP')">Hủy</a></th>
                                                                 }
                                                                 else
                                                                 {
@@ -287,6 +287,7 @@
                                                         <th>Total</th>
                                                         <th>Status</th>
                                                         <th>StatusPay</th>
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -320,6 +321,7 @@
                                                                 <th class="shoping__cart__item">
                                                                     @item.StatusPay
                                                                 </th>
+                                                                <th><a class="btn btn-danger">Báo cáo</a></th>
                                                             </tr>
                                                         }
                                                     }
@@ -405,44 +407,55 @@
     <script>
         function Canceldh(id) {
             if (confirm("Bạn có muốn hủy đơn hàng?")) {
-                var form = new FormData();
-                form.append("idp", id);
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/Home/RemoveOrder", true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.status == 200 && xhr.readyState == 4) {
-                        var json = JSON.parse(xhr.responseText);
-                        if (json.Data.status == "OK") {
-                            $("#donhang_" + id).remove();
-                            alert("Delete Success");
-                        }
-                        else {
-                            alert("Delete Fail");
+                var lydo = prompt("Lý do?");
+                if (lydo != "") {
+                    var form = new FormData();
+                    form.append("idp", id);
+                    form.append("lydo", lydo);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/Home/RemoveOrder", true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.status == 200 && xhr.readyState == 4) {
+                            var json = JSON.parse(xhr.responseText);
+                            if (json.Data.status == "OK") {
+                                alert("Delete Success");
+                                location.reload();
+                            }
+                            else {
+                                alert("Delete Fail");
+                            }
                         }
                     }
+                    xhr.send(form);
+                } else {
+                    alert("Bạn không có lý do để hủy");
                 }
-                xhr.send(form);
             }
         }
-        function Canceldh1(id) {
-            if (confirm("Bạn có muốn hủy đơn hàng?")) {
-                var form = new FormData();
-                form.append("idp", id);
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/Home/RemoveOrder", true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.status == 200 && xhr.readyState == 4) {
-                        var json = JSON.parse(xhr.responseText);
-                        if (json.Data.status == "OK") {
-                            $("#donhang1_" + id).remove();
-                            alert("Delete Success");
-                        }
-                        else {
-                            alert("Delete Fail");
+        function Report(id) {
+            if (confirm("Bạn có muốn báo cáo đơn hàng?")) {
+                var lydo = prompt("Lý do?");
+                if (lydo != "") {
+                    var form = new FormData();
+                    form.append("idp", id);
+                    form.append("lydo", lydo);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/Home/ReportOrder", true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.status == 200 && xhr.readyState == 4) {
+                            var json = JSON.parse(xhr.responseText);
+                            if (json.Data.status == "OK") {
+                                alert("Report Success");
+                            }
+                            else {
+                                alert("Report Fail");
+                            }
                         }
                     }
+                    xhr.send(form);
+                } else {
+                    alert("Bạn không có lý do để hủy");
                 }
-                xhr.send(form);
             }
         }
         var body = $("html, body");

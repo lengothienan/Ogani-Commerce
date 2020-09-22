@@ -577,7 +577,8 @@
                     } else if (js.Data.status == "OKK") {
                         setTimeout("Mess(" + (thutu - 1 + 2) + ")", 0);
                     } else {
-                        setTimeout("Mess(" + thutu  + ")", 0);
+                        setTimeout("Mess(" + thutu + ")", 0);
+                        $('#messages').animate({ scrollTop: $('#messages')[0].scrollHeight });
                     }
                 }
             }
